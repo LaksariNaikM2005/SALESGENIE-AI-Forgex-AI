@@ -1,0 +1,143 @@
+import os
+from typing import Any
+
+from flask import Flask, jsonify, redirect, render_template, request, url_for
+from flask_jwt_extended import JWTManager
+from sqlalchemy.exc import SQLAlchemyError
+
+try:
+    from .auth_jwt import auth_bp, bcrypt
+    from .database import Lead, close_session, get_session, init_db
+except ImportError:
+    from auth_jwt import auth_bp, bcrypt
+    from database import Lead, close_session, get_session, init_db
+
+
+def create_app() -> Flask:
+    app = Flask(
+        __name__,
+        template_folder="../frontend/templates",
+        static_folder="../frontend/static",
+    )
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///sales.db")
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "dev-change-this-secret")
+
+    bcrypt.init_app(app)
+    JWTManager(app)
+    init_db(app)
+    app.teardown_appcontext(close_session)
+    app.register_blueprint(auth_bp)
+
+    @app.route("/")
+    def index():
+        session = get_session()
+        try:
+            leads = session.query(Lead).order_by(Lead.id.desc()).all()
+
+            total_leads = len(leads)
+            won_leads = len([lead for lead in leads if lead.stage.lower() == "closed won"])
+            conversion_rate = round((won_leads / total_leads * 100), 2) if total_leads else 0.0
+            pipeline_value = round(sum((lead.revenue or 0.0) for lead in leads), 2)
+
+            return render_template(
+                "index.html",
+                leads=leads,
+                total_leads=total_leads,
+                conversion_rate=conversion_rate,
+                conversion=conversion_rate,
+                pipeline_value=pipeline_value,
+            )
+        finally:
+            session.close()
+
+    @app.route("/add", methods=["GET", "POST"])
+    def add_lead():
+        if request.method == "GET":
+            return render_template("add_lead.html")
+
+        payload: dict[str, Any]
+        if request.is_json:
+            payload = request.get_json(silent=True) or {}
+        else:
+            payload = request.form.to_dict()
+        company = (payload.get("company") or "").strip()
+        contact = (payload.get("contact") or "").strip()
+        designation = (payload.get("designation") or "").strip()
+        industry = (payload.get("industry") or "").strip()
+        stage = (payload.get("stage") or "New Lead").strip()
+        notes = (payload.get("notes") or "").strip()
+
+        if not company or not contact:
+            error_response: dict[str, str | bool] = {
+                "success": False,
+                "message": "company and contact are required",
+            }
+            if request.is_json:
+                return jsonify(error_response), 400
+            return jsonify(error_response), 400
+
+        try:
+            revenue = float(payload.get("revenue") or 0)
+        except (TypeError, ValueError):
+            revenue = 0.0
+
+        try:
+            score = float(payload.get("score") or 0)
+        except (TypeError, ValueError):
+            score = 0.0
+
+        session = get_session()
+        try:
+            lead = Lead(
+                company=company,
+                contact=contact,
+                designation=designation,
+                industry=industry,
+                revenue=revenue,
+                stage=stage,
+                score=score,
+                notes=notes,
+            )
+            session.add(lead)
+            session.commit()
+
+            if request.is_json:
+                return jsonify({"success": True, "data": lead.to_dict()}), 201
+            return redirect(url_for("index"))
+        except SQLAlchemyError:
+            session.rollback()
+            return jsonify({"success": False, "message": "failed to create lead"}), 500
+        finally:
+            session.close()
+
+    @app.route("/delete/<int:lead_id>", methods=["POST", "DELETE"])
+    def delete_lead(lead_id: int):
+        session = get_session()
+        try:
+            lead = session.get(Lead, lead_id)
+            if not lead:
+                if request.is_json or request.method == "DELETE":
+                    return jsonify({"success": False, "message": "lead not found"}), 404
+                return redirect(url_for("index"))
+
+            session.delete(lead)
+            session.commit()
+
+            if request.is_json or request.method == "DELETE":
+                return jsonify({"success": True, "message": "lead deleted"}), 200
+            return redirect(url_for("index"))
+        except SQLAlchemyError:
+            session.rollback()
+            return jsonify({"success": False, "message": "failed to delete lead"}), 500
+        finally:
+            session.close()
+
+    return app
+
+
+app = create_app()
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
