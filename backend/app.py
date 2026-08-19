@@ -133,6 +133,36 @@ def create_app() -> Flask:
         finally:
             session.close()
 
+    @app.route("/update_stage/<int:lead_id>", methods=["POST", "PUT"])
+    def update_stage(lead_id: int):
+        payload: dict[str, Any]
+        if request.is_json:
+            payload = request.get_json(silent=True) or {}
+        else:
+            payload = request.form.to_dict()
+        
+        stage = (payload.get("stage") or "").strip()
+        if not stage:
+            return jsonify({"success": False, "message": "stage is required"}), 400
+
+        session = get_session()
+        try:
+            lead = session.get(Lead, lead_id)
+            if not lead:
+                return jsonify({"success": False, "message": "lead not found"}), 404
+
+            lead.stage = stage
+            session.commit()
+
+            if request.is_json:
+                return jsonify({"success": True, "data": lead.to_dict()}), 200
+            return redirect(url_for("index"))
+        except SQLAlchemyError:
+            session.rollback()
+            return jsonify({"success": False, "message": "failed to update stage"}), 500
+        finally:
+            session.close()
+
     return app
 
 
