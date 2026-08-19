@@ -1,0 +1,101 @@
+company_name,contact_person,email,phone,industry,employees,annual_revenue,funding_stage,city,country,website,status,notes
+NimbusWorks 1,Kiran Gupta,kiran.gupta@nimbusworks1.com,+91-9730905309,Telecom,918,35951564,Bootstrapped,Mumbai,India,https://nimbusworks1.com,Customer,Interested in demo
+NovaSystems 2,Neha Verma,neha.verma@novasystems2.com,+91-9764539627,Telecom,504,27720027,Series C,Chennai,India,https://novasystems2.com,Prospect,Requested pricing
+ApexLabs 3,Aditya Das,aditya.das@apexlabs3.com,+91-9942905770,Telecom,936,35327794,Series A,Pune,India,https://apexlabs3.com,Lead,Existing customer
+NimbusLabs 4,Aditya Mehta,aditya.mehta@nimbuslabs4.com,+91-9636075705,Software,371,14165661,Seed,Delhi,India,https://nimbuslabs4.com,Customer,Potential enterprise client
+NextSolutions 5,Rahul Verma,rahul.verma@nextsolutions5.com,+91-9379745899,Education,997,30534348,Bootstrapped,Pune,India,https://nextsolutions5.com,Lead,Existing customer
+VertexSystems 6,Vivaan Mehta,vivaan.mehta@vertexsystems6.com,+91-9190412453,Logistics,626,17857144,Series C,Noida,India,https://vertexsystems6.com,Prospect,Follow up next week
+ApexTech 7,Aarav Patel,aarav.patel@apextech7.com,+91-9509613427,Healthcare,609,40252105,Series A,Kolkata,India,https://apextech7.com,Prospect,Interested in demo
+BlueSolutions 8,Rahul Patel,rahul.patel@bluesolutions8.com,+91-9880524902,Logistics,775,8347856,Seed,Bangalore,India,https://bluesolutions8.com,Prospect,Potential enterprise client
+QuantumWorks 9,Vivaan Singh,vivaan.singh@quantumworks9.com,+91-9403018157,AI,989,33600643,Series A,Jaipur,India,https://quantumworks9.com,Lead,Requested pricing
+BrightTech 10,Vikram Gupta,vikram.gupta@brighttech10.com,+91-9230952572,Telecom,581,21062025,Series B,Mumbai,India,https://brighttech10.com,Customer,Potential enterprise client
+EcoWorks 11,Rohan Gupta,rohan.gupta@ecoworks11.com,+91-9213048494,Logistics,174,13870177,Series C,Pune,India,https://ecoworks11.com,Customer,Potential enterprise client
+QuantumSystems 12,Anjali Mehta,anjali.mehta@quantumsystems12.com,+91-9280800246,Education,859,913201,Bootstrapped,Hyderabad,India,https://quantumsystems12.com,Customer,Follow up next week
+NovaDynamics 13,Vivaan Rao,vivaan.rao@novadynamics13.com,+91-9127417246,Telecom,437,42855500,Series C,Noida,India,https://novadynamics13.com,Customer,Existing customer
+NovaTech 14,Rahul Singh,rahul.singh@novatech14.com,+91-9271571012,Software,904,26774611,Series A,Chennai,India,https://novatech14.com,Customer,Requested pricing
+VertexDynamics 15,Priya Sharma,priya.sharma@vertexdynamics15.com,+91-9143403083,Retail,50,45795160,Series A,Kolkata,India,https://vertexdynamics15.com,Prospect,Existing customer
+PrimeSystems 16,Kiran Joshi,kiran.joshi@primesystems16.com,+91-9915235300,Manufacturing,902,8872950,Series C,Pune,India,https://primesystems16.com,Prospect,Requested pricing
+VertexLabs 17,Vikram Rao,vikram.rao@vertexlabs17.com,+91-9188173135,Healthcare,397,19665709,Series C,Chennai,India,https://vertexlabs17.com,Lead,Requested pricing
+VertexSystems 18,Vikram Kumar,vikram.kumar@vertexsystems18.com,+91-9733431708,Healthcare,899,2512596,Series C,Bangalore,India,https://vertexsystems18.com,Prospect,Potential enterprise client
+ApexSystems 19,Rahul Das,rahul.das@apexsystems19.com,+91-9928560061,Retail,793,32957818,Private,Mumbai,India,https://apexsystems19.com,Prospect,Follow up next week
+VertexSolutions 20,Aditya Singh,aditya.singh@vertexsolutions20.com,+91-9006808055,Healthcare,309,20915850,Seed,Bangalore,India,https://vertexsolutions20.com,Lead,Requested pricing
+BlueTech 21,Neha Kumar,neha.kumar@bluetech21.com,+91-9318351236,Healthcare,259,28385855,Private,Bangalore,India,https://bluetech21.com,Lead,Potential enterprise client
+ApexSystems 22,Aditya Kumar,aditya.kumar@apexsystems22.com,+91-9864638279,Logistics,207,9479243,Bootstrapped,Chennai,India,https://apexsystems22.com,Lead,Existing customer
+BrightTech 23,Aditya Rao,aditya.rao@brighttech23.com,+91-9543190158,AI,525,10245342,Seed,Chennai,India,https://brighttech23.com,Lead,Potential enterprise client
+EcoSystems 24,Neha Singh,neha.singh@ecosystems24.com,+91-9212956502,Logistics,844,5332018,Seed,Pune,India,https://ecosystems24.com,Customer,Follow up next week
+NimbusSolutions 25,Vivaan Joshi,vivaan.joshi@nimbussolutions25.com,+91-9151617577,Agriculture,238,17436750,Private,Mumbai,India,https://nimbussolutions25.com,Prospect,Existing customer
+EcoSystems 26,Aditya Das,aditya.das@ecosystems26.com,+91-9676917744,Software,126,18343734,Series B,Delhi,India,https://ecosystems26.com,Lead,Requested pricing
+QuantumSolutions 27,Aditya Joshi,aditya.joshi@quantumsolutions27.com,+91-9137948277,AI,666,49677790,Series A,Delhi,India,https://quantumsolutions27.com,Prospect,Existing customer
+NimbusLabs 28,Aditya Gupta,aditya.gupta@nimbuslabs28.com,+91-9453352993,Education,922,14235807,Bootstrapped,Pune,India,https://nimbuslabs28.com,Lead,Interested in demo
+BlueSolutions 29,Amit Patel,amit.patel@bluesolutions29.com,+91-9481920474,Telecom,812,32043068,Series C,Noida,India,https://bluesolutions29.com,Prospect,Potential enterprise client
+VertexSystems 30,Kiran Verma,kiran.verma@vertexsystems30.com,+91-9865959818,Software,832,20335519,Private,Mumbai,India,https://vertexsystems30.com,Customer,Follow up next week
+BlueSolutions 31,Neha Patel,neha.patel@bluesolutions31.com,+91-9149259835,AI,131,29495191,Seed,Hyderabad,India,https://bluesolutions31.com,Customer,Requested pricing
+NimbusLabs 32,Meera Gupta,meera.gupta@nimbuslabs32.com,+91-9188499650,Finance,519,17574891,Series C,Jaipur,India,https://nimbuslabs32.com,Prospect,Existing customer
+EcoLabs 33,Vivaan Gupta,vivaan.gupta@ecolabs33.com,+91-9235377246,Telecom,728,25080384,Series C,Mumbai,India,https://ecolabs33.com,Customer,Existing customer
+QuantumSystems 34,Rohan Das,rohan.das@quantumsystems34.com,+91-9923089305,Logistics,550,2409686,Seed,Mumbai,India,https://quantumsystems34.com,Lead,Follow up next week
+ApexSystems 35,Priya Patel,priya.patel@apexsystems35.com,+91-9644956314,Software,411,5068832,Series A,Bangalore,India,https://apexsystems35.com,Customer,Interested in demo
+VertexSystems 36,Suresh Sharma,suresh.sharma@vertexsystems36.com,+91-9647383811,Agriculture,665,10136024,Seed,Ahmedabad,India,https://vertexsystems36.com,Lead,Interested in demo
+NimbusLabs 37,Vikram Rao,vikram.rao@nimbuslabs37.com,+91-9041960514,Manufacturing,183,48334252,Series A,Kolkata,India,https://nimbuslabs37.com,Prospect,Potential enterprise client
+VertexTech 38,Anjali Sharma,anjali.sharma@vertextech38.com,+91-9593035656,Manufacturing,557,28418492,Private,Hyderabad,India,https://vertextech38.com,Customer,Existing customer
+EcoSystems 39,Rahul Mehta,rahul.mehta@ecosystems39.com,+91-9342741407,Agriculture,454,28171604,Seed,Kolkata,India,https://ecosystems39.com,Customer,Interested in demo
+EcoTech 40,Neha Verma,neha.verma@ecotech40.com,+91-9222519140,Manufacturing,139,36479073,Series A,Mumbai,India,https://ecotech40.com,Customer,Requested pricing
+BlueLabs 41,Vikram Sharma,vikram.sharma@bluelabs41.com,+91-9967548975,Agriculture,773,17727046,Series B,Ahmedabad,India,https://bluelabs41.com,Prospect,Interested in demo
+BlueDynamics 42,Anjali Verma,anjali.verma@bluedynamics42.com,+91-9809008170,Healthcare,188,37011728,Series A,Pune,India,https://bluedynamics42.com,Lead,Potential enterprise client
+NextWorks 43,Rohan Joshi,rohan.joshi@nextworks43.com,+91-9214970546,Agriculture,660,10068997,Seed,Kolkata,India,https://nextworks43.com,Lead,Potential enterprise client
+ApexTech 44,Aarav Sharma,aarav.sharma@apextech44.com,+91-9637787205,Finance,272,36339899,Series A,Pune,India,https://apextech44.com,Prospect,Potential enterprise client
+EcoDynamics 45,Priya Gupta,priya.gupta@ecodynamics45.com,+91-9913534363,Education,764,8834259,Series B,Bangalore,India,https://ecodynamics45.com,Lead,Follow up next week
+ApexDynamics 46,Rohan Sharma,rohan.sharma@apexdynamics46.com,+91-9630367117,Telecom,286,40515396,Series C,Bangalore,India,https://apexdynamics46.com,Prospect,Follow up next week
+BlueLabs 47,Neha Sharma,neha.sharma@bluelabs47.com,+91-9134369019,Agriculture,741,17904896,Series B,Noida,India,https://bluelabs47.com,Prospect,Existing customer
+NimbusSolutions 48,Priya Rao,priya.rao@nimbussolutions48.com,+91-9788784894,Agriculture,117,9342440,Series A,Hyderabad,India,https://nimbussolutions48.com,Customer,Follow up next week
+BrightLabs 49,Vikram Rao,vikram.rao@brightlabs49.com,+91-9484334861,Finance,244,6771348,Series A,Hyderabad,India,https://brightlabs49.com,Prospect,Interested in demo
+NimbusDynamics 50,Aditya Verma,aditya.verma@nimbusdynamics50.com,+91-9733311764,Software,184,8620669,Series A,Mumbai,India,https://nimbusdynamics50.com,Prospect,Potential enterprise client
+QuantumDynamics 51,Aarav Sharma,aarav.sharma@quantumdynamics51.com,+91-9408533918,Manufacturing,261,7195999,Private,Mumbai,India,https://quantumdynamics51.com,Lead,Existing customer
+BlueDynamics 52,Priya Verma,priya.verma@bluedynamics52.com,+91-9997215934,Finance,633,18900965,Bootstrapped,Ahmedabad,India,https://bluedynamics52.com,Lead,Existing customer
+BlueSystems 53,Vikram Das,vikram.das@bluesystems53.com,+91-9239138373,AI,482,34105886,Series B,Jaipur,India,https://bluesystems53.com,Lead,Interested in demo
+NovaSystems 54,Rohan Rao,rohan.rao@novasystems54.com,+91-9508891056,Agriculture,339,35476517,Series C,Delhi,India,https://novasystems54.com,Lead,Interested in demo
+BlueSolutions 55,Rohan Mehta,rohan.mehta@bluesolutions55.com,+91-9463417767,Retail,354,28182645,Series A,Ahmedabad,India,https://bluesolutions55.com,Lead,Requested pricing
+QuantumTech 56,Meera Gupta,meera.gupta@quantumtech56.com,+91-9996627561,Education,812,14197743,Private,Hyderabad,India,https://quantumtech56.com,Customer,Interested in demo
+VertexSystems 57,Vikram Das,vikram.das@vertexsystems57.com,+91-9408085624,Finance,515,40785268,Private,Ahmedabad,India,https://vertexsystems57.com,Customer,Potential enterprise client
+ApexDynamics 58,Rahul Das,rahul.das@apexdynamics58.com,+91-9253831391,Software,881,3046742,Seed,Kolkata,India,https://apexdynamics58.com,Prospect,Follow up next week
+NextWorks 59,Meera Patel,meera.patel@nextworks59.com,+91-9377803096,Telecom,135,21143370,Series C,Bangalore,India,https://nextworks59.com,Customer,Existing customer
+ApexWorks 60,Priya Sharma,priya.sharma@apexworks60.com,+91-9231349186,Finance,829,49079265,Series B,Jaipur,India,https://apexworks60.com,Prospect,Existing customer
+VertexTech 61,Amit Patel,amit.patel@vertextech61.com,+91-9585878361,Logistics,512,45324360,Private,Chennai,India,https://vertextech61.com,Customer,Requested pricing
+ApexSystems 62,Vivaan Sharma,vivaan.sharma@apexsystems62.com,+91-9906200477,Education,613,13956725,Seed,Noida,India,https://apexsystems62.com,Prospect,Interested in demo
+BrightWorks 63,Priya Mehta,priya.mehta@brightworks63.com,+91-9689435906,Healthcare,645,22581444,Seed,Hyderabad,India,https://brightworks63.com,Lead,Potential enterprise client
+NovaLabs 64,Rahul Verma,rahul.verma@novalabs64.com,+91-9899107246,Software,44,21031549,Series A,Jaipur,India,https://novalabs64.com,Prospect,Follow up next week
+QuantumWorks 65,Anjali Sharma,anjali.sharma@quantumworks65.com,+91-9038010210,Logistics,544,8365200,Bootstrapped,Delhi,India,https://quantumworks65.com,Prospect,Interested in demo
+EcoLabs 66,Meera Patel,meera.patel@ecolabs66.com,+91-9086672557,Telecom,698,22016119,Series A,Hyderabad,India,https://ecolabs66.com,Lead,Follow up next week
+PrimeSolutions 67,Suresh Verma,suresh.verma@primesolutions67.com,+91-9785702403,Agriculture,955,43338479,Series B,Kolkata,India,https://primesolutions67.com,Lead,Requested pricing
+ApexWorks 68,Anjali Patel,anjali.patel@apexworks68.com,+91-9458503002,Agriculture,488,1435735,Series B,Kolkata,India,https://apexworks68.com,Prospect,Requested pricing
+ApexLabs 69,Priya Mehta,priya.mehta@apexlabs69.com,+91-9247765356,Software,498,36462393,Seed,Pune,India,https://apexlabs69.com,Customer,Follow up next week
+QuantumSolutions 70,Priya Verma,priya.verma@quantumsolutions70.com,+91-9994283279,Logistics,951,12719095,Seed,Pune,India,https://quantumsolutions70.com,Prospect,Interested in demo
+PrimeSystems 71,Anjali Patel,anjali.patel@primesystems71.com,+91-9696913094,AI,156,23739040,Series C,Hyderabad,India,https://primesystems71.com,Customer,Follow up next week
+PrimeSolutions 72,Anjali Joshi,anjali.joshi@primesolutions72.com,+91-9927603681,Education,900,46484937,Seed,Bangalore,India,https://primesolutions72.com,Lead,Existing customer
+NovaDynamics 73,Meera Gupta,meera.gupta@novadynamics73.com,+91-9598453762,Education,614,1269793,Series A,Kolkata,India,https://novadynamics73.com,Lead,Requested pricing
+QuantumDynamics 74,Anjali Mehta,anjali.mehta@quantumdynamics74.com,+91-9531688747,Finance,897,37812571,Series C,Chennai,India,https://quantumdynamics74.com,Lead,Existing customer
+QuantumSystems 75,Amit Gupta,amit.gupta@quantumsystems75.com,+91-9032544524,Agriculture,678,22280492,Series C,Hyderabad,India,https://quantumsystems75.com,Prospect,Existing customer
+BlueSolutions 76,Rahul Kumar,rahul.kumar@bluesolutions76.com,+91-9174912233,Finance,826,7554468,Series B,Ahmedabad,India,https://bluesolutions76.com,Prospect,Potential enterprise client
+NextLabs 77,Amit Patel,amit.patel@nextlabs77.com,+91-9785199467,Agriculture,217,18051930,Bootstrapped,Delhi,India,https://nextlabs77.com,Prospect,Existing customer
+NovaWorks 78,Aditya Singh,aditya.singh@novaworks78.com,+91-9592441447,Healthcare,437,26143489,Series B,Noida,India,https://novaworks78.com,Prospect,Requested pricing
+NovaTech 79,Amit Rao,amit.rao@novatech79.com,+91-9606943835,Logistics,943,13217481,Series C,Mumbai,India,https://novatech79.com,Prospect,Existing customer
+ApexTech 80,Neha Rao,neha.rao@apextech80.com,+91-9490058838,AI,154,18363121,Bootstrapped,Ahmedabad,India,https://apextech80.com,Customer,Potential enterprise client
+ApexTech 81,Vikram Mehta,vikram.mehta@apextech81.com,+91-9811569585,Software,521,15985020,Series B,Jaipur,India,https://apextech81.com,Prospect,Existing customer
+BrightDynamics 82,Neha Singh,neha.singh@brightdynamics82.com,+91-9936247968,Telecom,122,27480048,Private,Pune,India,https://brightdynamics82.com,Customer,Requested pricing
+NovaWorks 83,Suresh Joshi,suresh.joshi@novaworks83.com,+91-9043337906,Finance,532,11620299,Bootstrapped,Chennai,India,https://novaworks83.com,Prospect,Requested pricing
+VertexDynamics 84,Vikram Sharma,vikram.sharma@vertexdynamics84.com,+91-9463680901,Education,155,16081058,Series C,Bangalore,India,https://vertexdynamics84.com,Customer,Potential enterprise client
+NovaLabs 85,Vikram Kumar,vikram.kumar@novalabs85.com,+91-9423884881,AI,896,20893731,Seed,Jaipur,India,https://novalabs85.com,Lead,Potential enterprise client
+ApexLabs 86,Rahul Rao,rahul.rao@apexlabs86.com,+91-9876812145,Education,516,22956365,Private,Noida,India,https://apexlabs86.com,Customer,Requested pricing
+ApexWorks 87,Meera Rao,meera.rao@apexworks87.com,+91-9245439885,Retail,536,35529755,Series B,Jaipur,India,https://apexworks87.com,Lead,Follow up next week
+PrimeLabs 88,Rohan Patel,rohan.patel@primelabs88.com,+91-9256751076,AI,183,44775687,Series A,Delhi,India,https://primelabs88.com,Prospect,Follow up next week
+EcoSystems 89,Aarav Patel,aarav.patel@ecosystems89.com,+91-9353447373,Logistics,967,13482707,Private,Delhi,India,https://ecosystems89.com,Lead,Potential enterprise client
+VertexDynamics 90,Rahul Kumar,rahul.kumar@vertexdynamics90.com,+91-9908683960,Finance,889,33076018,Series C,Hyderabad,India,https://vertexdynamics90.com,Lead,Interested in demo
+PrimeWorks 91,Suresh Verma,suresh.verma@primeworks91.com,+91-9594701862,Manufacturing,755,24715505,Bootstrapped,Pune,India,https://primeworks91.com,Lead,Interested in demo
+NextSystems 92,Aditya Kumar,aditya.kumar@nextsystems92.com,+91-9067746909,Retail,818,37693813,Series B,Pune,India,https://nextsystems92.com,Customer,Existing customer
+NovaLabs 93,Priya Patel,priya.patel@novalabs93.com,+91-9747366617,Healthcare,667,17754910,Private,Chennai,India,https://novalabs93.com,Prospect,Follow up next week
+ApexDynamics 94,Vikram Das,vikram.das@apexdynamics94.com,+91-9241536701,Manufacturing,656,44454084,Seed,Kolkata,India,https://apexdynamics94.com,Lead,Existing customer
+NovaLabs 95,Anjali Mehta,anjali.mehta@novalabs95.com,+91-9818219195,Software,33,27707555,Series A,Kolkata,India,https://novalabs95.com,Prospect,Potential enterprise client
+VertexLabs 96,Vivaan Mehta,vivaan.mehta@vertexlabs96.com,+91-9835370028,Education,356,9060626,Series B,Mumbai,India,https://vertexlabs96.com,Prospect,Potential enterprise client
+QuantumSystems 97,Rohan Sharma,rohan.sharma@quantumsystems97.com,+91-9002880343,AI,475,37751929,Private,Kolkata,India,https://quantumsystems97.com,Lead,Interested in demo
+VertexLabs 98,Aditya Mehta,aditya.mehta@vertexlabs98.com,+91-9547582259,Telecom,866,4009354,Series C,Ahmedabad,India,https://vertexlabs98.com,Prospect,Requested pricing
+VertexSystems 99,Vikram Gupta,vikram.gupta@vertexsystems99.com,+91-9485206378,Healthcare,506,3128509,Series A,Chennai,India,https://vertexsystems99.com,Customer,Potential enterprise client
+QuantumTech 100,Aarav Sharma,aarav.sharma@quantumtech100.com,+91-9988335740,AI,484,1936483,Series C,Pune,India,https://quantumtech100.com,Customer,Existing customer
