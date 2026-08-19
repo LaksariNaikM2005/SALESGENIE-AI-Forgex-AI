@@ -133,6 +133,8 @@ def create_app() -> Flask:
         finally:
             session.close()
 
+    VALID_STAGES = ["New Lead", "Qualified", "Proposal", "Negotiation", "Closed Won"]
+
     @app.route("/update_stage/<int:lead_id>", methods=["POST", "PUT"])
     def update_stage(lead_id: int):
         payload: dict[str, Any]
@@ -145,13 +147,19 @@ def create_app() -> Flask:
         if not stage:
             return jsonify({"success": False, "message": "stage is required"}), 400
 
+        # Normalize stage casing matching validation list
+        matching_stages = [s for s in VALID_STAGES if s.lower() == stage.lower()]
+        if not matching_stages:
+            return jsonify({"success": False, "message": f"invalid stage. Must be one of: {', '.join(VALID_STAGES)}"}), 400
+        validated_stage = matching_stages[0]
+
         session = get_session()
         try:
             lead = session.get(Lead, lead_id)
             if not lead:
                 return jsonify({"success": False, "message": "lead not found"}), 404
 
-            lead.stage = stage
+            lead.stage = validated_stage
             session.commit()
 
             if request.is_json:
@@ -160,6 +168,72 @@ def create_app() -> Flask:
         except SQLAlchemyError:
             session.rollback()
             return jsonify({"success": False, "message": "failed to update stage"}), 500
+        finally:
+            session.close()
+
+    @app.route("/update_score/<int:lead_id>", methods=["POST", "PUT"])
+    def update_score(lead_id: int):
+        payload: dict[str, Any]
+        if request.is_json:
+            payload = request.get_json(silent=True) or {}
+        else:
+            payload = request.form.to_dict()
+
+        try:
+            score = float(payload.get("score") or 0)
+        except (TypeError, ValueError):
+            return jsonify({"success": False, "message": "invalid score numeric value"}), 400
+
+        # Determine categorization category
+        if score >= 70:
+            category = "Hot"
+        elif score >= 40:
+            category = "Warm"
+        else:
+            category = "Cold"
+
+        session = get_session()
+        try:
+            lead = session.get(Lead, lead_id)
+            if not lead:
+                return jsonify({"success": False, "message": "lead not found"}), 404
+
+            lead.score = score
+            lead.category = category
+            session.commit()
+
+            return jsonify({"success": True, "data": lead.to_dict()}), 200
+        except SQLAlchemyError:
+            session.rollback()
+            return jsonify({"success": False, "message": "failed to update score"}), 500
+        finally:
+            session.close()
+
+    @app.route("/api/kpis", methods=["GET"])
+    def api_kpis():
+        session = get_session()
+        try:
+            leads = session.query(Lead).all()
+            total_leads = len(leads)
+            won_leads = len([lead for lead in leads if lead.stage.lower() == "closed won"])
+            
+            conversion_rate = round((won_leads / total_leads * 100), 2) if total_leads else 0.0
+            pipeline_value = round(sum((lead.revenue or 0.0) for lead in leads), 2)
+            avg_score = round(sum((lead.score or 0.0) for lead in leads) / total_leads, 2) if total_leads else 0.0
+            
+            # Simulated Response / Cycle metrics
+            avg_cycle_days = 14.5 if total_leads else 0.0
+
+            return jsonify({
+                "success": True,
+                "data": {
+                    "total_leads": total_leads,
+                    "conversion_rate": conversion_rate,
+                    "pipeline_value": pipeline_value,
+                    "average_score": avg_score,
+                    "average_cycle_days": avg_cycle_days
+                }
+            }), 200
         finally:
             session.close()
 

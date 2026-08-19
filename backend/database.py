@@ -41,6 +41,7 @@ class Lead(Base):
     revenue: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     stage: Mapped[str] = mapped_column(String(60), default="New Lead", index=True, nullable=False)
     score: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    category: Mapped[str] = mapped_column(String(20), default="Cold", nullable=False)
     notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
@@ -56,6 +57,7 @@ class Lead(Base):
             "revenue": self.revenue,
             "stage": self.stage,
             "score": self.score,
+            "category": self.category,
             "notes": self.notes,
             "created_at": self.created_at.isoformat(),
         }
