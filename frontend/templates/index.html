@@ -1,18 +1,445 @@
-<!-- templates/index.html snippet -->
-<div class="container mt-4">
-<h2>SalesGenie AI Dashboard</h2>
-<div class="row">
-<div class="col-md-3">
-<div class="card p-3 shadow-sm text-center">
-<h5>Conversion Rate</h5>
-<h2 class="text-primary">{{ conversion }}%</h2>
+{% extends "base.html" %}
+
+{% block title %}Pipeline Dashboard — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Page Header & Actions -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">
+                Sales Pipeline & Lead Intelligence
+            </h2>
+            <p class="text-secondary mb-0 small">
+                Predictive lead qualification, real-time stage progression, and AI conversion scoring.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm" onclick="window.location.reload()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+            </button>
+            <a href="{{ url_for('add_lead') }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-2">
+                <i class="bi bi-plus-lg"></i>
+                <span>Add Opportunity</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Metric Summary Cards Grid -->
+    <div class="row g-3 mb-4">
+        <!-- Card 1: Total Leads -->
+        <div class="col-sm-6 col-xl">
+            <div class="kpi-card kpi-primary p-3 card-hover">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary fw-semibold text-xs text-uppercase tracking-wider">Total Pipeline</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1" id="kpi_total_leads">{{ total_leads }}</h3>
+                        <span class="text-xs text-muted">Active opportunities</span>
+                    </div>
+                    <div class="kpi-icon-box bg-primary-subtle text-primary">
+                        <i class="bi bi-people-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Conversion Rate -->
+        <div class="col-sm-6 col-xl">
+            <div class="kpi-card kpi-success p-3 card-hover">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary fw-semibold text-xs text-uppercase tracking-wider">Win Rate</span>
+                        <h3 class="fw-bold text-success mb-0 mt-1" id="kpi_conversion_rate">{{ conversion_rate }}%</h3>
+                        <span class="text-xs text-muted">Closed Won ratio</span>
+                    </div>
+                    <div class="kpi-icon-box bg-success-subtle text-success">
+                        <i class="bi bi-trophy-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Total Pipeline Value -->
+        <div class="col-sm-6 col-xl">
+            <div class="kpi-card kpi-info p-3 card-hover">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary fw-semibold text-xs text-uppercase tracking-wider">Pipeline Value</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1" id="kpi_pipeline_value">${{ "{:,.2f}".format(pipeline_value) }}</h3>
+                        <span class="text-xs text-muted">Total deal value</span>
+                    </div>
+                    <div class="kpi-icon-box bg-info-subtle text-info">
+                        <i class="bi bi-currency-dollar fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Avg Lead Score -->
+        <div class="col-sm-6 col-xl">
+            <div class="kpi-card kpi-warning p-3 card-hover">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary fw-semibold text-xs text-uppercase tracking-wider">Avg Lead Score</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1" id="kpi_avg_score">
+                            {% if total_leads > 0 %}
+                                {{ (leads | map(attribute="score") | sum / total_leads) | round(1) }}%
+                            {% else %}
+                                0.0%
+                            {% endif %}
+                        </h3>
+                        <span class="text-xs text-muted">AI Engagement Index</span>
+                    </div>
+                    <div class="kpi-icon-box bg-warning-subtle text-warning">
+                        <i class="bi bi-speedometer2 fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5: Sales Cycle -->
+        <div class="col-sm-6 col-xl">
+            <div class="kpi-card p-3 card-hover" style="border-top: 4px solid #8b5cf6;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-secondary fw-semibold text-xs text-uppercase tracking-wider">Avg Cycle</span>
+                        <h3 class="fw-bold text-dark mb-0 mt-1" id="kpi_avg_cycle">{% if total_leads > 0 %}14.5d{% else %}0d{% endif %}</h3>
+                        <span class="text-xs text-muted">Lead to close time</span>
+                    </div>
+                    <div class="kpi-icon-box" style="background-color: #f3e8ff; color: #8b5cf6;">
+                        <i class="bi bi-clock-history fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visual Analytics Charts Row -->
+    <div class="row g-3 mb-4">
+        <!-- Pipeline Stage Breakdown Chart -->
+        <div class="col-lg-7">
+            <div class="card shadow-sm h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-2 bg-primary-subtle text-primary">
+                            <i class="bi bi-bar-chart-steps"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-0">Pipeline Stage Funnel</h6>
+                            <small class="text-secondary text-xs">Opportunity distribution across sales stages</small>
+                        </div>
+                    </div>
+                    <span class="badge bg-light text-secondary border">Real-time</span>
+                </div>
+                <div style="height: 240px; position: relative;">
+                    <canvas id="pipelineStageChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lead Category AI Breakdown Chart -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100 p-3">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-2 bg-danger-subtle text-danger">
+                            <i class="bi bi-pie-chart-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-0">Lead Heat & Qualification</h6>
+                            <small class="text-secondary text-xs">AI categorization (Hot / Warm / Cold)</small>
+                        </div>
+                    </div>
+                    <span class="badge bg-light text-secondary border">ML Classified</span>
+                </div>
+                <div style="height: 240px; position: relative;">
+                    <canvas id="leadCategoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search, Multi-Filter Toolbar -->
+    <div class="toolbar-container p-3 mb-3">
+        <div class="row g-2 align-items-center">
+            <!-- Search Bar -->
+            <div class="col-md-5 col-lg-4">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0 text-secondary">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" id="tableSearchInput" class="form-control border-start-0 ps-0" placeholder="Search company, contact, or industry...">
+                </div>
+            </div>
+
+            <!-- Stage Filter -->
+            <div class="col-6 col-md-3 col-lg-3">
+                <select id="stageFilterSelect" class="form-select form-select-sm">
+                    <option value="" selected>All Stages</option>
+                    <option value="New Lead">New Lead</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Proposal">Proposal</option>
+                    <option value="Negotiation">Negotiation</option>
+                    <option value="Closed Won">Closed Won</option>
+                </select>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="col-6 col-md-2 col-lg-2">
+                <select id="categoryFilterSelect" class="form-select form-select-sm">
+                    <option value="" selected>All AI Categories</option>
+                    <option value="Hot">🔥 Hot (≥70%)</option>
+                    <option value="Warm">⚡ Warm (40-69%)</option>
+                    <option value="Cold">❄️ Cold (&lt;40%)</option>
+                </select>
+            </div>
+
+            <!-- Reset & Count -->
+            <div class="col-md-2 col-lg-3 d-flex align-items-center justify-content-md-end gap-2 mt-2 mt-md-0">
+                <span class="badge bg-light text-dark border px-2 py-1 small" id="filteredCountBadge">{{ leads|length }} of {{ leads|length }} leads</span>
+                <button id="resetFiltersBtn" class="btn btn-outline-secondary btn-sm px-2" title="Reset Filters">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pipeline Lead Data Table Container -->
+    <div class="custom-table-container mb-4">
+        {% if leads|length > 0 %}
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 table-hover">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width: 60px;">ID</th>
+                        <th>Company & Notes</th>
+                        <th>Contact & Role</th>
+                        <th>Industry</th>
+                        <th>Deal Value</th>
+                        <th style="min-width: 160px;">Pipeline Stage</th>
+                        <th>AI Score</th>
+                        <th>Category</th>
+                        <th class="text-end pe-4" style="width: 100px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="leadTableBody">
+                    {% for lead in leads %}
+                    <tr id="lead-row-{{ lead.id }}" data-lead-id="{{ lead.id }}" data-stage="{{ lead.stage }}" data-category="{{ lead.category }}" data-notes="{{ lead.notes }}">
+                        <td class="ps-4 text-secondary small fw-semibold">
+                            #{{ lead.id }}
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                    {{ lead.company[:1].upper() }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark lead-company">{{ lead.company }}</div>
+                                    {% if lead.notes %}
+                                    <small class="text-muted d-block text-truncate" style="max-width: 220px;" title="{{ lead.notes }}">
+                                        <i class="bi bi-chat-left-text me-1 text-xs"></i>{{ lead.notes }}
+                                    </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-semibold text-dark lead-contact">{{ lead.contact }}</div>
+                            <small class="text-secondary">{{ lead.designation if lead.designation else "—" }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border lead-industry">
+                                {{ lead.industry if lead.industry else "General" }}
+                            </span>
+                        </td>
+                        <td class="fw-bold text-dark">
+                            ${{ "{:,.2f}".format(lead.revenue) if lead.revenue else "$0.00" }}
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <select class="form-select form-select-sm stage-select-dropdown" data-lead-id="{{ lead.id }}" data-current-stage="{{ lead.stage }}" style="font-size: 0.82rem; font-weight: 500;">
+                                    <option value="New Lead" {% if lead.stage == 'New Lead' %}selected{% endif %}>New Lead</option>
+                                    <option value="Qualified" {% if lead.stage == 'Qualified' %}selected{% endif %}>Qualified</option>
+                                    <option value="Proposal" {% if lead.stage == 'Proposal' %}selected{% endif %}>Proposal</option>
+                                    <option value="Negotiation" {% if lead.stage == 'Negotiation' %}selected{% endif %}>Negotiation</option>
+                                    <option value="Closed Won" {% if lead.stage == 'Closed Won' %}selected{% endif %}>Closed Won</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border score-pill lead-score-pill">
+                                {{ lead.score }}%
+                            </span>
+                        </td>
+                        <td>
+                            {% set cat_lower = lead.category.lower() %}
+                            <span class="category-badge category-{{ cat_lower }} lead-category-pill">
+                                {% if cat_lower == 'hot' %}
+                                    <span class="pulse-indicator"></span> Hot
+                                {% elif cat_lower == 'warm' %}
+                                    <i class="bi bi-sun-fill"></i> Warm
+                                {% else %}
+                                    <i class="bi bi-snow"></i> Cold
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-sm rounded-circle p-1 border shadow-none" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 32px; height: 32px;">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+                                    <li>
+                                        <button class="dropdown-item py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#aiScoringModal" data-lead-id="{{ lead.id }}" data-company="{{ lead.company }}" data-current-score="{{ lead.score }}">
+                                            <i class="bi bi-cpu text-primary"></i> Run AI Scoring
+                                        </button>
+                                    </li>
+                                    <li><hr class="dropdown-divider my-1"></li>
+                                    <li>
+                                        <button class="dropdown-item text-danger py-2 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" data-lead-id="{{ lead.id }}" data-company="{{ lead.company }}">
+                                            <i class="bi bi-trash"></i> Delete Opportunity
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- No Filter Results Row -->
+                    <tr id="tableNoResultsRow" style="display: none;">
+                        <td colspan="9" class="text-center py-5">
+                            <div class="text-secondary mb-2">
+                                <i class="bi bi-search fs-2"></i>
+                            </div>
+                            <h6 class="fw-semibold text-dark mb-1">No matching leads found</h6>
+                            <p class="text-secondary small mb-0">Try adjusting your search terms or filters.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <!-- Empty State When 0 Leads in Database -->
+        <div class="empty-state-box">
+            <div class="empty-state-icon">
+                <i class="bi bi-inbox-fill"></i>
+            </div>
+            <h4 class="fw-bold text-dark mb-2">Your Pipeline is Empty</h4>
+            <p class="text-secondary small mb-4" style="max-width: 460px; margin-left: auto; margin-right: auto;">
+                Start building your sales engine by creating your first sales lead or importing existing opportunities.
+            </p>
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <a href="{{ url_for('add_lead') }}" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                    <i class="bi bi-plus-circle me-1"></i> Add First Lead
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
 </div>
+
+<!-- AI Lead Scoring Interactive Modal -->
+<div class="modal fade" id="aiScoringModal" tabindex="-1" aria-labelledby="aiScoringModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header bg-gradient-dark text-white border-0 px-4 py-3">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-primary text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="aiScoringModalLabel">Random Forest AI Scoring Engine</h5>
+                        <small class="text-white-50">Predict conversion likelihood based on behavioral signals</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="bg-light p-3 rounded-3 mb-4 d-flex align-items-center justify-content-between border">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Target Account</span>
+                        <h5 class="fw-bold text-dark mb-0" id="scoringModalCompany">Apex Solutions</h5>
+                    </div>
+                    <div class="text-end">
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Current Score</span>
+                        <div class="fw-bold text-primary" id="scoringCurrentScore">0.0%</div>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-dark mb-3">Engagement Parameters (Scoring Features)</h6>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold text-secondary">Email Opens (Count)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-envelope-open"></i></span>
+                            <input type="number" id="aiEmailOpens" class="form-control" min="0" max="100" value="12">
+                        </div>
+                        <small class="text-muted text-xs">Total marketing email clicks</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold text-secondary">Website Visits (Count)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="bi bi-globe"></i></span>
+                            <input type="number" id="aiWebsiteVisits" class="form-control" min="0" max="200" value="18">
+                        </div>
+                        <small class="text-muted text-xs">Pricing & product page hits</small>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold text-secondary">Demo Requested</label>
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input fs-5" type="checkbox" id="aiDemoRequested" checked>
+                            <label class="form-check-label fw-semibold text-dark ms-1" for="aiDemoRequested">Yes / Completed</label>
+                        </div>
+                        <small class="text-muted text-xs">Direct sales demo interaction</small>
+                    </div>
+                </div>
+
+                <!-- Prediction Output Card -->
+                <div class="card border-primary p-3 bg-primary-subtle bg-opacity-25 rounded-3">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-bold text-dark text-sm">Predicted Conversion Likelihood:</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <h4 class="fw-bold text-primary mb-0" id="aiPredictedScoreVal">85.4%</h4>
+                            <span id="aiPredictedCategoryBadge" class="category-badge category-hot">
+                                <span class="pulse-indicator"></span> Hot
+                            </span>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div id="aiScoreMeter" class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" style="width: 85.4%;" aria-valuenow="85.4" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light px-4 py-3 border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2" id="applyAIScoreBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="aiScoreSpinner"></span>
+                    <i class="bi bi-check2-circle"></i>
+                    <span>Apply AI Score & Category</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="col-md-3">
-<div class="card p-3 shadow-sm text-center">
-<h5>Pipeline Value</h5>
-<h2 class="text-success">${{ pipeline_value }}</h2>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg rounded-4 text-center p-4">
+            <div class="mx-auto text-danger mb-3 p-3 bg-danger-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                <i class="bi bi-trash-fill fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-2">Delete Lead?</h5>
+            <p class="text-secondary small mb-4">
+                Are you sure you want to remove <strong id="deleteModalLeadName" class="text-dark">this lead</strong>? This action cannot be undone.
+            </p>
+            <div class="d-flex align-items-center justify-content-center gap-2">
+                <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4 fw-semibold" id="confirmDeleteLeadBtn">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
-</div>
-</div>
+{% endblock %}

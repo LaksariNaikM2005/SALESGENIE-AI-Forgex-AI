@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Opportunity — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Breadcrumb & Header -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none text-primary"><i class="bi bi-grid-1x2-fill me-1"></i>Pipeline</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Add Lead</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">
+                Create Sales Opportunity
+            </h2>
+            <p class="text-secondary mb-0 small">
+                Register a new lead into the sales pipeline for automated scoring and stage tracking.
+            </p>
+        </div>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-1">
+            <i class="bi bi-arrow-left"></i>
+            <span>Back to Pipeline</span>
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Form Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-white border-bottom py-3 px-4">
+                    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-person-lines-fill text-primary"></i> Opportunity Profile Details
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ url_for('add_lead') }}" method="POST" id="mainAddLeadForm">
+                        
+                        <!-- Section 1: Company & Contact Information -->
+                        <h6 class="text-xs text-uppercase text-secondary fw-bold tracking-wider mb-3">1. Account & Contact</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="company" class="form-label fw-semibold text-dark small">
+                                    Company Name <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-building"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="company" name="company" placeholder="e.g. Acme Corporation" required autofocus>
+                                </div>
+                                <div class="form-text text-xs">Full legal or trading name of the client organization.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="contact" class="form-label fw-semibold text-dark small">
+                                    Primary Contact Name <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="contact" name="contact" placeholder="e.g. Alex Henderson" required>
+                                </div>
+                                <div class="form-text text-xs">Main decision maker or business representative.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="designation" class="form-label fw-semibold text-dark small">Job Title / Designation</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-briefcase"></i></span>
+                                    <input type="text" class="form-control border-start-0 ps-0" id="designation" name="designation" placeholder="e.g. Chief Technology Officer">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="industry" class="form-label fw-semibold text-dark small">Industry Sector</label>
+                                <select class="form-select" id="industry" name="industry">
+                                    <option value="Software" selected>Software & Cloud Services</option>
+                                    <option value="AI">Artificial Intelligence & ML</option>
+                                    <option value="Telecom">Telecommunications</option>
+                                    <option value="Healthcare">Healthcare & Life Sciences</option>
+                                    <option value="Logistics">Logistics & Supply Chain</option>
+                                    <option value="Retail">Retail & E-commerce</option>
+                                    <option value="Manufacturing">Advanced Manufacturing</option>
+                                    <option value="Education">Education & EdTech</option>
+                                    <option value="Finance">Financial Services & Fintech</option>
+                                    <option value="Other">Other Industry</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Pipeline Deal Economics -->
+                        <h6 class="text-xs text-uppercase text-secondary fw-bold tracking-wider mb-3">2. Pipeline Deal Economics</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label for="revenue" class="form-label fw-semibold text-dark small">Estimated Deal Value ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-currency-dollar"></i></span>
+                                    <input type="number" step="500" min="0" class="form-control border-start-0 ps-0" id="revenue" name="revenue" placeholder="50000" value="25000">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="stage" class="form-label fw-semibold text-dark small">Initial Stage</label>
+                                <select class="form-select" id="stage" name="stage">
+                                    <option value="New Lead" selected>New Lead</option>
+                                    <option value="Qualified">Qualified</option>
+                                    <option value="Proposal">Proposal</option>
+                                    <option value="Negotiation">Negotiation</option>
+                                    <option value="Closed Won">Closed Won</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="score" class="form-label fw-semibold text-dark small">Initial Score (0–100)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-speedometer2"></i></span>
+                                    <input type="number" step="0.5" min="0" max="100" class="form-control border-start-0 ps-0" id="score" name="score" placeholder="50" value="50">
+                                </div>
+                                <div class="form-text text-xs">Can be re-scored automatically anytime.</div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Notes & Context -->
+                        <h6 class="text-xs text-uppercase text-secondary fw-bold tracking-wider mb-3">3. Notes & Context</h6>
+                        <div class="mb-4">
+                            <label for="notes" class="form-label fw-semibold text-dark small">Opportunity Notes & Discovery Findings</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="4" placeholder="Mention key requirements, current tech stack, estimated timeline, or scheduled demo dates..."></textarea>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top">
+                            <a href="{{ url_for('index') }}" class="btn btn-light rounded-pill px-4 fw-semibold">Cancel</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 py-2 d-flex align-items-center gap-2 shadow-sm fw-semibold">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>Save & Add to Pipeline</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guidance Side Column -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="p-2 rounded-circle bg-primary-subtle text-primary">
+                        <i class="bi bi-robot fs-5"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-0">AI Scoring Automation</h6>
+                </div>
+                <p class="text-secondary small mb-3">
+                    Once a lead is registered, SalesGenie AI evaluates conversion probability using Random Forest analytics based on:
+                </p>
+                <ul class="list-unstyled text-secondary small d-flex flex-column gap-2 mb-3">
+                    <li class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check2 text-success fs-5"></i>
+                        <span><strong>Email Engagement:</strong> Open rate and click-through frequency.</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check2 text-success fs-5"></i>
+                        <span><strong>Web Activity:</strong> Pricing page and whitepaper visits.</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-2">
+                        <i class="bi bi-check2 text-success fs-5"></i>
+                        <span><strong>Demo Direct:</strong> Scheduled sales product demonstrations.</span>
+                    </li>
+                </ul>
+                <hr class="my-3">
+                <h6 class="fw-bold text-dark text-xs text-uppercase tracking-wider mb-2">Category Breakdown</h6>
+                <div class="d-flex flex-column gap-2">
+                    <div class="p-2 rounded-2 bg-danger-subtle text-danger border border-danger-subtle d-flex align-items-center justify-content-between text-xs fw-semibold">
+                        <span>🔥 Hot Lead</span>
+                        <span>Score &ge; 70%</span>
+                    </div>
+                    <div class="p-2 rounded-2 bg-warning-subtle text-warning border border-warning-subtle d-flex align-items-center justify-content-between text-xs fw-semibold">
+                        <span>⚡ Warm Lead</span>
+                        <span>Score 40% – 69%</span>
+                    </div>
+                    <div class="p-2 rounded-2 bg-secondary-subtle text-secondary border border-secondary-subtle d-flex align-items-center justify-content-between text-xs fw-semibold">
+                        <span>❄️ Cold Lead</span>
+                        <span>Score &lt; 40%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
