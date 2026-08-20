@@ -3,8 +3,9 @@ import sys
 from datetime import datetime, timezone
 from typing import Any
 
-# Ensure parent directory is in path for absolute imports of siblings
+# Ensure parent directory and workspace root are in path for absolute imports of siblings
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from flask import Flask, jsonify, request
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
@@ -13,6 +14,16 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from database import init_db, get_session, close_session, Lead, User
 from auth_jwt import auth_bp, bcrypt
+
+try:
+    from automation.api.crm_endpoints import automation_bp
+except ImportError:
+    from api.crm_endpoints import automation_bp
+
+try:
+    from ml_engine.lead_scoring import train_and_predict_lead
+except ImportError:
+    from lead_scoring import train_and_predict_lead
 
 def create_app() -> Flask:
     app = Flask(__name__)
@@ -23,7 +34,13 @@ def create_app() -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
         "DATABASE_URL", "sqlite:///" + os.path.join(basedir, "../../sales.db")
     )
-    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "vtusalesgenie-secure-key-2026")
+    app.config["JWT_ALGORITHM"] = "RS256"
+    private_key_path = os.path.join(basedir, "../private_key.pem")
+    public_key_path = os.path.join(basedir, "../public_key.pem")
+    with open(private_key_path, "r") as f:
+        app.config["JWT_PRIVATE_KEY"] = f.read()
+    with open(public_key_path, "r") as f:
+        app.config["JWT_PUBLIC_KEY"] = f.read()
 
     # Initialize extensions
     bcrypt.init_app(app)
@@ -34,9 +51,29 @@ def create_app() -> Flask:
     app.teardown_appcontext(close_session)
 
     # Register blueprints
-    app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(auth_bp, url_prefix="/api/auth", name="auth_api")
     # Also register under legacy prefix to maintain complete compatibility
-    app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(auth_bp, url_prefix="/auth", name="auth_legacy")
+    app.register_blueprint(automation_bp)
+
+    from flask import g
+    from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
+
+    @app.before_request
+    def load_user():
+        try:
+            verify_jwt_in_request(optional=True)
+            user_id = get_jwt_identity()
+            if user_id:
+                session = get_session()
+                try:
+                    g.current_user = session.get(User, int(user_id))
+                finally:
+                    session.close()
+            else:
+                g.current_user = None
+        except Exception:
+            g.current_user = None
 
     # API Routes
     @app.route("/api/leads", methods=["GET"])
@@ -195,6 +232,32 @@ def create_app() -> Flask:
             return jsonify({"success": False, "message": str(e)}), 500
         finally:
             session.close()
+
+    @app.route("/api/predict", methods=["POST"])
+    def predict():
+        payload = request.get_json() or {}
+        try:
+            emails = int(payload.get("emails", 0))
+            visits = int(payload.get("visits", 0))
+            demo = 1 if payload.get("demo") else 0
+            
+            score = train_and_predict_lead(emails, visits, demo)
+            
+            # Determine category
+            if score >= 70:
+                category = "Hot"
+            elif score >= 40:
+                category = "Warm"
+            else:
+                category = "Cold"
+                
+            return jsonify({
+                "success": True,
+                "score": score,
+                "category": category
+            })
+        except Exception as exc:
+            return jsonify({"success": False, "message": str(exc)}), 500
 
     return app
 
