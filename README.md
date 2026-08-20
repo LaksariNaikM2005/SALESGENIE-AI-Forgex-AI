@@ -1,4 +1,4 @@
-# 🌌 SalesGenie AI (Forgex AI)
+#  SalesGenie AI (Forgex AI)
 
 SalesGenie AI is an advanced, production-grade agentic lead scoring, outreach generation, and sales pipeline management platform. It leverages machine learning models to analyze lead engagement, predict conversion probabilities, and automate custom workflows and outreach.
 

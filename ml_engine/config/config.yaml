@@ -42,3 +42,11 @@ ml_engine:
     random_state: 42
     n_estimators: 100
     min_samples_split: 2
+
+llm:
+  model: "gemini-1.5-flash"
+  temperature: 0.7
+
+prompts:
+  outreach: "Write a short, engaging B2B cold email for a lead in the {industry} industry."
+  summary: "Summarize this sales meeting transcript and extract action items: {transcript}"

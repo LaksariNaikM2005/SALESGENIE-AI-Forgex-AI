@@ -1,4 +1,7 @@
-from database import db
+try:
+    from extensions import db
+except ImportError:
+    from backend.extensions import db
 
 class User(db.Model):
     __tablename__ = 'users'

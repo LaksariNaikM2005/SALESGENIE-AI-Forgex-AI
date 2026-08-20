@@ -1,8 +1,14 @@
+import os
+import sys
 from datetime import datetime, timedelta, timezone
+
+# Ensure root and backend directory are in path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "backend"))
 
 import schedule
 
-from backend.database import (
+from database import (
     Activity,
     FollowUp,
     Lead,
@@ -11,10 +17,11 @@ from backend.database import (
     get_session,
     SessionLocal,
 )
+
 from sqlalchemy import create_engine
 import os
 
-db_uri = os.getenv("DATABASE_URL", "sqlite:///sales.db")
+db_uri = os.getenv("DATABASE_URL", "sqlite:///backend/sales.db")
 connect_args = {"check_same_thread": False} if db_uri.startswith("sqlite") else {}
 engine = create_engine(db_uri, connect_args=connect_args, future=True)
 SessionLocal.configure(bind=engine)
@@ -217,7 +224,7 @@ def process_due_emails():
     import smtplib
     from email.message import EmailMessage
 
-    from backend.database import Email, get_session
+    from database import Email, get_session
 
     session = get_session()
     results = {

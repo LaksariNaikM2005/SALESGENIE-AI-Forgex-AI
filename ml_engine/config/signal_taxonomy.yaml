@@ -1,0 +1,63 @@
+# ==========================================
+# Forgex_AI / SalesGenie AI - Signal Taxonomy
+# ==========================================
+# Defines the weights and categories of intent signals used for lead scoring.
+
+taxonomy_version: "1.0"
+last_updated: "2026-08-20"
+
+categories:
+  # 1. Engagement Signals (Direct interactions with your company)
+  engagement:
+    weight_multiplier: 1.5
+    signals:
+      email_opened:
+        base_score: 5
+        description: "Lead opened an outreach email."
+      link_clicked:
+        base_score: 10
+        description: "Lead clicked a link inside an email."
+      email_replied:
+        base_score: 25
+        description: "Lead replied to an outreach email."
+      meeting_booked:
+        base_score: 50
+        description: "Lead successfully scheduled a discovery call."
+
+  # 2. Intent Signals (Behavioral indicators of buying intent)
+  intent:
+    weight_multiplier: 1.2
+    signals:
+      website_visit:
+        base_score: 2
+        description: "Lead visited the homepage."
+      pricing_page_view:
+        base_score: 15
+        description: "Lead viewed the pricing or checkout page."
+      whitepaper_download:
+        base_score: 20
+        description: "Lead downloaded a gated technical resource."
+      webinar_registration:
+        base_score: 15
+        description: "Lead registered for a product webinar."
+
+  # 3. Firmographic Signals (Company-level changes or attributes)
+  firmographic:
+    weight_multiplier: 1.0
+    signals:
+      recent_funding:
+        base_score: 30
+        description: "Company recently raised Series A/B/C funding."
+      leadership_change:
+        base_score: 15
+        description: "Company hired a new C-level executive or VP."
+      headcount_growth:
+        base_score: 10
+        description: "Company employee headcount grew by >15% in 6 months."
+
+# Scoring Thresholds (Matches your Milestone 2 specifications)
+thresholds:
+  hot_lead: 90
+  qualified_lead: 70
+  warm_lead: 50
+  cold_lead: 0

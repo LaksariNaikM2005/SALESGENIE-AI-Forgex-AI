@@ -1,6 +1,12 @@
 from flask import Blueprint, request, jsonify
-from database import db
+from extensions import db
 from models.lead import Lead
+
+from ml_engine.core.lead_scoring import predict_score
+
+# Inside your POST /leads route...
+lead_payload = request.json
+calculated_score = predict_score(lead_payload)
 
 lead_bp = Blueprint('lead_bp', __name__)
 
@@ -17,7 +23,7 @@ def create_lead():
         industry=data.get('industry', 'Unknown'),
         contact_person=data.get('contact_person', 'Unknown'),
         stage=data.get('stage', 'New Lead'),
-        ai_score=data.get('score', 0)
+        ai_score=calculated_score
     )
     db.session.add(new_lead)
     db.session.commit()
@@ -32,3 +38,14 @@ def delete_lead(lead_id):
     db.session.delete(lead)
     db.session.commit()
     return jsonify({"message": "Lead deleted successfully"}), 200
+
+
+def get_lead_stage(score):
+    if score >= 90:
+        return "Hot"
+    elif score >= 70:
+        return "Qualified"
+    elif score >= 50:
+        return "Warm"
+    else:
+        return "Cold"

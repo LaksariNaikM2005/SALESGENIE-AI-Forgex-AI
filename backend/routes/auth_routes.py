@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.user import User
-from database import db
+from extensions import db
 from utils.security import hash_password, check_password
 from flask_jwt_extended import create_access_token
 
@@ -26,7 +26,7 @@ def login():
     user = User.query.filter_by(username=data.get('username')).first()
     
     if user and check_password(user.password_hash, data.get('password')):
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
         return jsonify(access_token=access_token), 200
         
     return jsonify({"error": "Invalid credentials"}), 401
