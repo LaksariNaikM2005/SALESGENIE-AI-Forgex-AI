@@ -5,6 +5,8 @@ from flask import Flask
 from sqlalchemy import DateTime, Float, Integer, String, Text, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, scoped_session, sessionmaker
 
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 class Base(DeclarativeBase):
     pass
