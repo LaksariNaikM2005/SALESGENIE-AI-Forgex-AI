@@ -1,0 +1,44 @@
+# SalesGenie AI (Forgex AI) Configuration File
+# This file contains configuration settings for the backend Flask application,
+# JWT Authentication, SMTP outreach automation, ML model execution, and background scheduler.
+
+# Flask Application Settings
+app:
+  host: "127.0.0.1"
+  port: 5000
+  debug: true
+  secret_key: "dev-change-this-secret" # Used for Flask session security
+
+# Database Configuration
+database:
+  url: "sqlite:///sales.db"
+  track_modifications: false
+
+# JWT Authentication Settings
+jwt:
+  secret_key: "dev-change-this-secret" # Used for signing JWT access tokens
+  access_token_expires_minutes: 60
+
+# SMTP Outreach Email Settings
+smtp:
+  host: "smtp.example.com"
+  port: 587
+  username: "user@example.com"
+  password: "your-smtp-password"
+  from_email: "noreply@example.com"
+  use_tls: true
+  timeout_seconds: 30
+
+# Background Scheduler & Automation Tasks
+scheduler:
+  # Interval for running notification checks (followups and meetings due)
+  notification_check_interval_minutes: 30
+  # Scheduled time (24h format HH:MM) for daily sales report generation
+  daily_report_time: "18:00"
+
+# Machine Learning Lead Scoring Engine Parameters
+ml_engine:
+  lead_scoring:
+    random_state: 42
+    n_estimators: 100
+    min_samples_split: 2
