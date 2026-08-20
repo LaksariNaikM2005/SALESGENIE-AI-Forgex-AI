@@ -7,10 +7,22 @@ from sqlalchemy.exc import SQLAlchemyError
 
 try:
     from .auth_jwt import auth_bp, bcrypt
-    from .database import Lead, close_session, get_session, init_db
+    from .database import Lead, User, close_session, get_session, init_db
 except ImportError:
     from auth_jwt import auth_bp, bcrypt
-    from database import Lead, close_session, get_session, init_db
+    from database import Lead, User, close_session, get_session, init_db
+
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+try:
+    from automation.crm_endpoints import automation_bp
+except ImportError:
+    from crm_endpoints import automation_bp
+
+try:
+    from ml_engine.lead_scoring import train_and_predict_lead
+except ImportError:
+    from lead_scoring import train_and_predict_lead
 
 
 def create_app() -> Flask:
@@ -28,6 +40,26 @@ def create_app() -> Flask:
     init_db(app)
     app.teardown_appcontext(close_session)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(automation_bp)
+
+    from flask import g
+    from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
+
+    @app.before_request
+    def load_user():
+        try:
+            verify_jwt_in_request(optional=True)
+            user_id = get_jwt_identity()
+            if user_id:
+                session = get_session()
+                try:
+                    g.current_user = session.get(User, int(user_id))
+                finally:
+                    session.close()
+            else:
+                g.current_user = None
+        except Exception:
+            g.current_user = None
 
     @app.route("/")
     def index():
@@ -236,6 +268,32 @@ def create_app() -> Flask:
             }), 200
         finally:
             session.close()
+
+    @app.route("/api/predict", methods=["POST"])
+    def predict():
+        payload = request.get_json() or {}
+        try:
+            emails = int(payload.get("emails", 0))
+            visits = int(payload.get("visits", 0))
+            demo = 1 if payload.get("demo") else 0
+            
+            score = train_and_predict_lead(emails, visits, demo)
+            
+            # Determine category
+            if score >= 70:
+                category = "Hot"
+            elif score >= 40:
+                category = "Warm"
+            else:
+                category = "Cold"
+                
+            return jsonify({
+                "success": True,
+                "score": score,
+                "category": category
+            })
+        except Exception as exc:
+            return jsonify({"success": False, "message": str(exc)}), 500
 
     return app
 

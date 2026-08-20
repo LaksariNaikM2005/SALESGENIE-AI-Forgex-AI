@@ -63,6 +63,73 @@ class Lead(Base):
         }
 
 
+class FollowUp(Base):
+    __tablename__ = "follow_ups"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    lead_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    due_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    priority: Mapped[str] = mapped_column(String(50), default="Normal", nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="Pending", nullable=False)
+    notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class Meeting(Base):
+    __tablename__ = "meetings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    lead_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    title: Mapped[str] = mapped_column(String(200), default="", nullable=False)
+    scheduled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="Scheduled", nullable=False)
+    notes: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
+    )
+
+
+class Activity(Base):
+    __tablename__ = "activities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    lead_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    activity_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
+    )
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    lead_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    notification_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    is_read: Mapped[bool] = mapped_column(Integer, default=0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False
+    )
+
+
+class Email(Base):
+    __tablename__ = "emails"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    recipient: Mapped[str] = mapped_column(String(255), nullable=False)
+    subject: Mapped[str] = mapped_column(String(255), nullable=False)
+    body: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="scheduled", nullable=False)
+    scheduled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
 SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False))
 _engine = None
 
