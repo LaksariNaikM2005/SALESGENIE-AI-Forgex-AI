@@ -9,15 +9,7 @@ from backend.database import (
     Meeting,
     Notification,
     get_session,
-    SessionLocal,
 )
-from sqlalchemy import create_engine
-import os
-
-db_uri = os.getenv("DATABASE_URL", "sqlite:///sales.db")
-connect_args = {"check_same_thread": False} if db_uri.startswith("sqlite") else {}
-engine = create_engine(db_uri, connect_args=connect_args, future=True)
-SessionLocal.configure(bind=engine)
 
 
 def check_due_followups():
