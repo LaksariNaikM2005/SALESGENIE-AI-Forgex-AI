@@ -1,5 +1,8 @@
 import os
+import sys
 from typing import Any
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_jwt_extended import JWTManager
@@ -12,12 +15,10 @@ except ImportError:
     from auth_jwt import auth_bp, bcrypt
     from database import Lead, User, close_session, get_session, init_db
 
-import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 try:
-    from automation.crm_endpoints import automation_bp
+    from automation.api.crm_endpoints import automation_bp
 except ImportError:
-    from crm_endpoints import automation_bp
+    from api.crm_endpoints import automation_bp
 
 try:
     from ml_engine.lead_scoring import train_and_predict_lead
