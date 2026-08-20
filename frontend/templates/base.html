@@ -25,16 +25,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-body-tertiary">
+<body class="bg-body-tertiary{% if request.path == '/login' or request.path == '/register' %} auth-page{% endif %}">
 
-    {% if request.path == '/login' or request.path == '/register' %}
-    <!-- Standalone Authentication Layout for Login/Register -->
-    <div class="standalone-auth-layout">
-        
-    </div>
-    {% else %}
     <!-- ==========================================================================
          SaaS CRM LEFT SIDEBAR LAYOUT
+         Authentication pages reuse the same single Jinja content block.
+         CSS hides CRM chrome on /login and /register.
          ========================================================================== -->
 
     <!-- Desktop Fixed Left Sidebar -->
@@ -235,7 +231,6 @@
             </div>
         </footer>
     </div>
-    {% endif %}
 
     <!-- Global Quick Add Lead Modal -->
     <div class="modal fade" id="quickAddLeadModal" tabindex="-1" aria-labelledby="quickAddLeadModalLabel" aria-hidden="true">

@@ -583,3 +583,47 @@ body {
     }
 }
 
+
+/* ============================================================
+   AUTH PAGE OVERRIDE
+   Keep one shared Jinja content block while hiding CRM chrome.
+   ============================================================ */
+
+body.auth-page {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%) !important;
+}
+
+body.auth-page .app-sidebar,
+body.auth-page .app-header,
+body.auth-page .app-footer {
+    display: none !important;
+}
+
+body.auth-page .app-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    min-height: 100vh;
+}
+
+body.auth-page .app-content {
+    width: 100%;
+    min-height: 100vh;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+body.auth-page .auth-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+body.auth-page .auth-card {
+    width: 100%;
+    max-width: 440px;
+}
