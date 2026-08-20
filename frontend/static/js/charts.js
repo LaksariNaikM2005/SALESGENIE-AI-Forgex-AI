@@ -47,20 +47,8 @@ function initPipelineStageChart() {
             datasets: [{
                 label: "Leads in Stage",
                 data: data,
-                backgroundColor: [
-                    "rgba(59, 130, 246, 0.85)",   // New Lead -> Blue
-                    "rgba(13, 148, 136, 0.85)",   // Qualified -> Teal
-                    "rgba(139, 92, 246, 0.85)",  // Proposal -> Purple
-                    "rgba(249, 115, 22, 0.85)",   // Negotiation -> Orange
-                    "rgba(16, 185, 129, 0.85)"   // Closed Won -> Green
-                ],
-                borderColor: [
-                    "#3b82f6",
-                    "#0d9488",
-                    "#8b5cf6",
-                    "#f97316",
-                    "#10b981"
-                ],
+                backgroundColor: "rgba(59, 130, 246, 0.85)",
+                borderColor: "#3b82f6",
                 borderWidth: 1.5,
                 borderRadius: 8,
                 barPercentage: 0.55

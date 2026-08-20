@@ -241,7 +241,56 @@ def create_app() -> Flask:
 
 
 app = create_app()
+# ============================================================
+# FRONTEND PAGE ROUTES
+# ============================================================
 
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
 
-if __name__ == "__main__":
+@app.route("/register")
+def register_page():
+    return render_template("register.html")
+
+@app.route("/ai-lead-intelligence")
+def ai_lead_intelligence():
+    return render_template("ai_lead_intelligence.html")
+
+@app.route("/outreach")
+def outreach():
+    return render_template("outreach.html")
+
+@app.route("/conversation-intelligence")
+def conversation_intelligence():
+    return render_template("conversation_intelligence.html")
+
+@app.route("/meetings")
+def meetings():
+    return render_template("meetings.html")
+
+@app.route("/follow-ups")
+def follow_ups():
+    return render_template("follow_ups.html")
+
+@app.route("/notifications")
+def notifications():
+    return render_template("notifications.html")
+
+@app.route("/reports")
+def reports():
+    return render_template("reports.html")
+
+@app.route("/lead/<int:lead_id>")
+def lead_details(lead_id):
+    return render_template("lead_details.html", lead_id=lead_id)
+
+@app.route("/company-details")
+def company_details():
+    return render_template("company_details.html")
+
+if __name__ == '__main__':
+    print("Starting SalesGenie AI Backend Server...")
     app.run(debug=True, port=5000)
+
+

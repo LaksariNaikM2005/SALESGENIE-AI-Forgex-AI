@@ -1,6 +1,7 @@
 /* ==========================================================================
-   SalesGenie AI / ForgeX AI — Enterprise SaaS Design System
-   Stack: HTML5 + CSS3 + Bootstrap 5.3.3 + Vanilla JS
+   SalesGenie AI / ForgeX AI — Professional SaaS CRM Design System
+   Layout: Left Sidebar CRM Architecture + Fluid Content Area
+   Stack: HTML5 + CSS3 + Bootstrap 5.3.3 + Vanilla JS (ES6)
    ========================================================================== */
 
 :root {
@@ -55,6 +56,10 @@
     --cat-cold-bg: #f8fafc;
     --cat-cold-border: #e2e8f0;
 
+    /* Layout Dimensions */
+    --sidebar-width: 260px;
+    --header-height: 64px;
+
     /* UI Layout & Elevation Tokens */
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -72,7 +77,10 @@ body {
     color: #1e293b;
     background-color: var(--brand-bg);
     min-height: 100vh;
+    margin: 0;
+    padding: 0;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 /* Typography Enhancements */
@@ -92,44 +100,176 @@ body {
 }
 
 .brand-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 800;
 }
 
-/* Navigation Shell */
-.custom-navbar {
-    backdrop-filter: blur(12px);
-    background-color: rgba(255, 255, 255, 0.95) !important;
+/* ==========================================================================
+   LEFT SIDEBAR CRM ARCHITECTURE
+   ========================================================================== */
+
+/* Fixed Desktop Sidebar */
+.app-sidebar {
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100vh;
+    background-color: #ffffff;
+    border-right: 1px solid var(--brand-border);
+    z-index: 1040;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: transform 0.25s ease-in-out;
+}
+
+/* Sidebar Brand Header */
+.sidebar-header {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
     border-bottom: 1px solid var(--brand-border);
 }
 
-.nav-link {
-    font-size: 0.88rem;
-    font-weight: 500;
+/* Sidebar Navigation Items */
+.sidebar-nav {
+    list-style: none;
+    padding: 1rem 0.75rem;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-nav-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--brand-slate);
+    padding: 0.75rem 0.75rem 0.35rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-sm);
     color: #475569;
+    font-weight: 500;
+    font-size: 0.88rem;
+    text-decoration: none;
     transition: all 0.15s ease-in-out;
+    margin-bottom: 0.35rem;
 }
 
-.nav-link:hover {
-    color: var(--brand-primary);
+.sidebar-link i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+    transition: color 0.15s ease;
+}
+
+.sidebar-link:hover {
     background-color: #f1f5f9;
+    color: var(--brand-primary);
 }
 
-.nav-link.active {
-    color: var(--brand-primary) !important;
+.sidebar-link.active {
     background-color: var(--brand-primary-light) !important;
+    color: var(--brand-primary) !important;
     font-weight: 600;
 }
 
-/* Sidebar Navigation (for desktop SaaS mode) */
-.sidebar-wrapper {
-    width: 260px;
-    min-height: calc(100vh - 60px);
-    background: #ffffff;
-    border-right: 1px solid var(--brand-border);
+.sidebar-link.active i {
+    color: var(--brand-primary) !important;
 }
 
-/* Cards & Elevation */
+/* Sidebar Footer (Bottom Utilities & User) */
+.sidebar-footer {
+    padding: 1rem 0.75rem;
+    border-top: 1px solid var(--brand-border);
+    background-color: #ffffff;
+}
+
+/* ==========================================================================
+   MAIN CONTENT AREA (Right of Sidebar)
+   ========================================================================== */
+
+.app-main {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--brand-bg);
+    width: calc(100% - var(--sidebar-width));
+}
+
+/* Small Clean Top Header */
+.app-header {
+    height: var(--header-height);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--brand-border);
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.75rem;
+}
+
+/* App Content Area */
+.app-content {
+    flex-grow: 1;
+    padding: 1.5rem 1.75rem;
+}
+
+/* App Footer */
+.app-footer {
+    padding: 1rem 1.75rem;
+    background-color: #ffffff;
+    border-top: 1px solid var(--brand-border);
+}
+
+/* Standalone Auth Layout (No Sidebar) */
+.standalone-auth-layout {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    padding: 2rem 1rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 991.98px) {
+    .app-sidebar {
+        display: none;
+    }
+
+    .app-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .app-header {
+        padding: 0 1rem;
+        height: 60px;
+    }
+
+    .app-content {
+        padding: 1rem;
+    }
+}
+
+/* ==========================================================================
+   CARDS, TABLES, & DASHBOARD COMPONENTS
+   ========================================================================== */
+
 .card {
     border: 1px solid var(--brand-border);
     border-radius: var(--radius-md);
@@ -358,7 +498,7 @@ body {
 
 /* Auth Cards for Login / Register Pages */
 .auth-wrapper {
-    min-height: 85vh;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
