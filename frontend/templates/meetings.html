@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Meetings & Schedule — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill text-xs">
+                    <i class="bi bi-calendar2-week-fill me-1"></i> Milestone 3 Meeting Intelligence
+                </span>
+            </div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">Scheduled Meetings & CRM Interactions</h2>
+            <p class="text-secondary small mb-0">
+                Track executive calls, product demonstrations, and AI-transcribed conversation history.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-1">
+                <i class="bi bi-calendar-plus"></i>
+                <span>Schedule Meeting</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Meetings Schedule List -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+                <div class="card-header bg-white border-bottom py-3 px-4 d-flex align-items-center justify-content-between">
+                    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar-event text-primary"></i> Upcoming & Recent Sessions
+                    </h5>
+                    <span class="badge bg-light text-secondary border">3 Total</span>
+                </div>
+                <div class="list-group list-group-flush">
+                    <!-- Meeting 1 -->
+                    <div class="list-group-item p-4">
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="p-3 rounded-3 bg-primary-subtle text-primary fw-bold text-center" style="min-width: 54px;">
+                                    <div class="small">AUG</div>
+                                    <div class="fs-5 lh-1">25</div>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">Technical Architecture Review & Security Briefing</h6>
+                                    <div class="text-xs text-secondary d-flex align-items-center gap-2">
+                                        <span><i class="bi bi-building me-1"></i>Vertex Systems Corp</span>
+                                        <span>&bull;</span>
+                                        <span><i class="bi bi-person me-1"></i>Aditya Mehta (VP Ops)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Upcoming (2:00 PM EST)</span>
+                        </div>
+                        <div class="bg-light p-3 rounded-3 mt-2 text-xs d-flex align-items-center justify-content-between">
+                            <span class="text-secondary"><i class="bi bi-stars text-primary me-1"></i> AI Agenda: Review $50k proposal, SOC2 report, and custom pipeline workflow.</span>
+                            <a href="/conversation-intelligence" class="text-primary fw-semibold text-decoration-none">View Intel &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Meeting 2 -->
+                    <div class="list-group-item p-4">
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="p-3 rounded-3 bg-info-subtle text-info fw-bold text-center" style="min-width: 54px;">
+                                    <div class="small">AUG</div>
+                                    <div class="fs-5 lh-1">28</div>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">Product Demo & Executive Pitch</h6>
+                                    <div class="text-xs text-secondary d-flex align-items-center gap-2">
+                                        <span><i class="bi bi-building me-1"></i>Apex Tech Solutions</span>
+                                        <span>&bull;</span>
+                                        <span><i class="bi bi-person me-1"></i>Sarah Connor (VP Eng)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Scheduled</span>
+                        </div>
+                        <div class="bg-light p-3 rounded-3 mt-2 text-xs d-flex align-items-center justify-content-between">
+                            <span class="text-secondary"><i class="bi bi-stars text-primary me-1"></i> AI Agenda: Live walkthrough of Random Forest Lead Scoring & Conversion Metrics.</span>
+                            <a href="/conversation-intelligence" class="text-primary fw-semibold text-decoration-none">View Intel &rarr;</a>
+                        </div>
+                    </div>
+
+                    <!-- Meeting 3 -->
+                    <div class="list-group-item p-4">
+                        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="p-3 rounded-3 bg-light text-secondary fw-bold text-center border" style="min-width: 54px;">
+                                    <div class="small">AUG</div>
+                                    <div class="fs-5 lh-1">18</div>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">Initial Discovery & ICP Alignment Call</h6>
+                                    <div class="text-xs text-secondary d-flex align-items-center gap-2">
+                                        <span><i class="bi bi-building me-1"></i>NimbusWorks Enterprise</span>
+                                        <span>&bull;</span>
+                                        <span><i class="bi bi-person me-1"></i>Kiran Gupta (Director)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="badge bg-secondary-subtle text-secondary border rounded-pill">Completed</span>
+                        </div>
+                        <div class="bg-light p-3 rounded-3 mt-2 text-xs d-flex align-items-center justify-content-between">
+                            <span class="text-secondary"><i class="bi bi-check2-all text-success me-1"></i> Summary Transcribed: Action items extracted, 84% positive sentiment recorded.</span>
+                            <a href="/conversation-intelligence" class="text-primary fw-semibold text-decoration-none">Review Transcript &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar / Calendar Integration -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-plug text-success"></i> CRM Calendar Sync
+                </h6>
+                <div class="p-3 bg-light rounded-3 border mb-3 text-xs">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-semibold text-dark">Google Calendar</span>
+                        <span class="badge bg-success-subtle text-success">Connected</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="fw-semibold text-dark">Zoom Integration</span>
+                        <span class="badge bg-success-subtle text-success">Active</span>
+                    </div>
+                </div>
+                <p class="text-secondary text-xs mb-0">
+                    Meeting recordings are automatically fed to Member 2's NLP pipeline for action item extraction.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

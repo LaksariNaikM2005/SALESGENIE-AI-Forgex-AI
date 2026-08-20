@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Sales Analytics Reports — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-secondary-subtle text-secondary border rounded-pill text-xs">
+                    <i class="bi bi-file-earmark-bar-graph-fill me-1"></i> Milestone 4 Analytics
+                </span>
+            </div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">Revenue Forecasting & Sales Analytics</h2>
+            <p class="text-secondary small mb-0">
+                In-depth pipeline velocity, stage conversion trends, and cohort performance reporting.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <!-- Timeframe Filter -->
+            <select class="form-select form-select-sm" id="reportTimeframeSelect" style="width: auto;">
+                <option value="month" selected>This Month (August 2026)</option>
+                <option value="quarter">This Quarter (Q3 2026)</option>
+                <option value="year">This Fiscal Year (2026)</option>
+            </select>
+            <button class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" onclick="window.print()">
+                <i class="bi bi-printer me-1"></i> Print Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Report KPI Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <span class="text-xs text-uppercase text-secondary fw-semibold">Closed Revenue</span>
+                <h3 class="fw-bold text-success mb-0 mt-1">$145,000</h3>
+                <span class="text-xs text-muted">+24% vs previous cohort</span>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <span class="text-xs text-uppercase text-secondary fw-semibold">Pipeline Velocity</span>
+                <h3 class="fw-bold text-primary mb-0 mt-1">14.5 Days</h3>
+                <span class="text-xs text-muted">Average time to close</span>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <span class="text-xs text-uppercase text-secondary fw-semibold">Average Deal Size</span>
+                <h3 class="fw-bold text-dark mb-0 mt-1">$36,250</h3>
+                <span class="text-xs text-muted">Across 4 won contracts</span>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <span class="text-xs text-uppercase text-secondary fw-semibold">Conversion Win Rate</span>
+                <h3 class="fw-bold text-warning mb-0 mt-1">32.8%</h3>
+                <span class="text-xs text-muted">Qualified to Won conversion</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Breakdown Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="card-header bg-white border-bottom py-3 px-4 d-flex align-items-center justify-content-between">
+            <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-table text-primary"></i> Sector & Industry Performance Breakdown
+            </h5>
+            <span class="badge bg-light text-secondary border">Audited Data</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 table-hover">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Industry Sector</th>
+                        <th>Active Opportunities</th>
+                        <th>Total Pipeline Value</th>
+                        <th>Win Rate</th>
+                        <th>Avg AI Score</th>
+                        <th class="text-end pe-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">Software & SaaS</td>
+                        <td>34</td>
+                        <td class="fw-semibold">$1,240,000</td>
+                        <td><span class="badge bg-success-subtle text-success">38.5%</span></td>
+                        <td><span class="badge bg-light text-dark border">76.4%</span></td>
+                        <td class="text-end pe-4"><span class="badge bg-primary rounded-pill">Top Performer</span></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">AI & Data Analytics</td>
+                        <td>28</td>
+                        <td class="fw-semibold">$980,000</td>
+                        <td><span class="badge bg-success-subtle text-success">42.0%</span></td>
+                        <td><span class="badge bg-light text-dark border">82.1%</span></td>
+                        <td class="text-end pe-4"><span class="badge bg-danger-subtle text-danger border">High Growth</span></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">Telecommunications</td>
+                        <td>18</td>
+                        <td class="fw-semibold">$640,000</td>
+                        <td><span class="badge bg-warning-subtle text-warning">24.5%</span></td>
+                        <td><span class="badge bg-light text-dark border">62.8%</span></td>
+                        <td class="text-end pe-4"><span class="badge bg-light text-secondary border">Stable</span></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-bold text-dark">Healthcare & Biotech</td>
+                        <td>12</td>
+                        <td class="fw-semibold">$480,000</td>
+                        <td><span class="badge bg-success-subtle text-success">30.0%</span></td>
+                        <td><span class="badge bg-light text-dark border">69.5%</span></td>
+                        <td class="text-end pe-4"><span class="badge bg-light text-secondary border">Steady</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Lead Intelligence Profile — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Breadcrumb & Header -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none text-primary"><i class="bi bi-grid-1x2-fill me-1"></i>Pipeline</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Lead Details</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="category-badge category-hot"><span class="pulse-indicator"></span> Hot Lead</span>
+                <span class="stage-badge stage-qualified"><i class="bi bi-diagram-3-fill"></i> Qualified</span>
+            </div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-0">Vertex Systems Corp &bull; Aditya Mehta</h2>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
+            <a href="/outreach" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                <i class="bi bi-envelope-paper me-1"></i> Send AI Email
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Lead Information Column -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h5 class="fw-bold text-dark mb-3">Account & Opportunity Overview</h5>
+                <div class="row g-3 text-sm">
+                    <div class="col-md-6">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Company Name</span>
+                        <div class="fw-bold text-dark fs-6">Vertex Systems Corp</div>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Contact Person</span>
+                        <div class="fw-bold text-dark fs-6">Aditya Mehta</div>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Job Title</span>
+                        <div class="fw-semibold text-dark">Vice President of Engineering</div>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Industry Sector</span>
+                        <div class="fw-semibold text-dark">Logistics & Supply Chain AI</div>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Estimated Deal Value</span>
+                        <div class="fw-bold text-success fs-5">$50,000.00</div>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Current Pipeline Stage</span>
+                        <div class="fw-semibold text-dark">Qualified (Next: Proposal Delivery)</div>
+                    </div>
+                    <div class="col-12">
+                        <span class="text-secondary text-xs text-uppercase fw-semibold">Opportunity Notes & Discovery</span>
+                        <div class="p-3 bg-light rounded-3 border mt-1 text-secondary">
+                            Client evaluated multiple CRM solutions but needs tailored AI scoring for vertical sales reps. Pre-approved budget confirmed for Q4.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Intelligence Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold text-dark mb-0">AI Conversion Intelligence</h6>
+                    <span class="badge bg-primary-subtle text-primary border">Random Forest</span>
+                </div>
+                <div class="text-center p-3 bg-light rounded-3 border mb-3">
+                    <span class="text-xs text-uppercase text-secondary fw-bold">Conversion Likelihood</span>
+                    <div class="display-6 fw-bold text-danger my-1">92.0%</div>
+                    <span class="category-badge category-hot"><span class="pulse-indicator"></span> HOT LEAD</span>
+                </div>
+                <div class="d-flex flex-column gap-2 text-xs">
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Email Opens:</span>
+                        <strong class="text-dark">15 opens</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Website Visits:</span>
+                        <strong class="text-dark">22 visits</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Demo Requested:</span>
+                        <strong class="text-success"><i class="bi bi-check-circle-fill"></i> Confirmed</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

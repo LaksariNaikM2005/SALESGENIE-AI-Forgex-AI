@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Create Agent Account — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="auth-wrapper">
+        <div class="auth-card p-4 p-md-5">
+            <!-- Brand & Heading -->
+            <div class="text-center mb-4">
+                <div class="brand-icon-wrapper mx-auto rounded-3 d-flex align-items-center justify-content-center text-white mb-3" style="width: 48px; height: 48px;">
+                    <i class="bi bi-person-badge-fill fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-dark tracking-tight mb-1">Create Account</h3>
+                <p class="text-secondary small mb-0">Join the SalesGenie AI agent network</p>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="standaloneRegisterForm" autocomplete="on">
+                <!-- Username -->
+                <div class="mb-3">
+                    <label for="regPageUsername" class="form-label fw-semibold text-secondary small">
+                        Agent Username <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="regPageUsername" name="username" placeholder="e.g. sales_agent_01" required autofocus>
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="mb-3">
+                    <label for="regPageEmail" class="form-label fw-semibold text-secondary small">
+                        Business Email <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control border-start-0 ps-0" id="regPageEmail" name="email" placeholder="agent@salesgenie.ai" required>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label for="regPagePassword" class="form-label fw-semibold text-secondary small">
+                        Password <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-key"></i></span>
+                        <input type="password" class="form-control border-start-0 ps-0" id="regPagePassword" name="password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-text text-xs">Minimum 6 characters with secure hashing.</div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-3">
+                    <label for="regPageConfirmPassword" class="form-label fw-semibold text-secondary small">
+                        Confirm Password <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-shield-check"></i></span>
+                        <input type="password" class="form-control border-start-0 ps-0" id="regPageConfirmPassword" name="confirm_password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <!-- Alert Feedback Box -->
+                <div id="regPageAlert" class="alert alert-danger small d-none py-2 d-flex align-items-center gap-2 mb-3" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span id="regPageAlertText">Error creating account</span>
+                </div>
+
+                <!-- Success Feedback Box -->
+                <div id="regPageSuccess" class="alert alert-success small d-none py-2 d-flex align-items-center gap-2 mb-3" role="alert">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Account registered! Redirecting to sign in...</span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success w-100 rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 shadow-sm" id="regPageSubmitBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="regPageSpinner"></span>
+                    <i class="bi bi-person-plus-fill" id="regPageIcon"></i>
+                    <span>Register Account</span>
+                </button>
+            </form>
+
+            <!-- Card Footer / Login Link -->
+            <div class="text-center mt-4 pt-3 border-top">
+                <p class="text-secondary small mb-0">
+                    Already registered?
+                    <a href="/login" class="text-primary fw-semibold text-decoration-none">Sign In here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("standaloneRegisterForm");
+    const alertBox = document.getElementById("regPageAlert");
+    const alertText = document.getElementById("regPageAlertText");
+    const successBox = document.getElementById("regPageSuccess");
+    const submitBtn = document.getElementById("regPageSubmitBtn");
+    const spinner = document.getElementById("regPageSpinner");
+    const icon = document.getElementById("regPageIcon");
+
+    if (form) {
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const username = document.getElementById("regPageUsername").value.trim();
+            const email = document.getElementById("regPageEmail").value.trim();
+            const password = document.getElementById("regPagePassword").value;
+            const confirmPassword = document.getElementById("regPageConfirmPassword").value;
+
+            if (password !== confirmPassword) {
+                alertText.textContent = "Passwords do not match. Please verify.";
+                alertBox.classList.remove("d-none");
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                spinner.classList.remove("d-none");
+                icon.classList.add("d-none");
+                alertBox.classList.add("d-none");
+                successBox.classList.add("d-none");
+
+                const response = await fetch("/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    successBox.classList.remove("d-none");
+                    if (window.showToast) window.showToast("Account created successfully! Redirecting...", "success");
+                    setTimeout(() => {
+                        window.location.href = "/login";
+                    }, 1200);
+                } else {
+                    alertText.textContent = data.message || "Registration failed. Username or email may already be taken.";
+                    alertBox.classList.remove("d-none");
+                }
+            } catch (err) {
+                alertText.textContent = "Network error communicating with authentication service.";
+                alertBox.classList.remove("d-none");
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add("d-none");
+                icon.classList.remove("d-none");
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

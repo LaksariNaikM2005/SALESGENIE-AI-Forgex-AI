@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Conversation Intelligence — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill text-xs">
+                    <i class="bi bi-chat-quote-fill me-1"></i> Milestone 3 Conversation AI
+                </span>
+            </div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">Conversation Intelligence & Meeting Analytics</h2>
+            <p class="text-secondary small mb-0">
+                Automated transcription summarization, key action item extraction, sentiment scoring, and competitive signals.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm" onclick="window.location.reload()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Refresh Insights
+            </button>
+        </div>
+    </div>
+
+    <!-- Top Key Insights Row -->
+    <div class="row g-3 mb-4">
+        <!-- Sentiment Card -->
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Overall Sentiment</span>
+                        <h4 class="fw-bold text-success mb-0 mt-1">Positive (84%)</h4>
+                        <span class="text-xs text-muted">High executive receptivity</span>
+                    </div>
+                    <div class="p-3 bg-success-subtle text-success rounded-3">
+                        <i class="bi bi-emoji-smile-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Interest -->
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Customer Interest</span>
+                        <h4 class="fw-bold text-primary mb-0 mt-1">High</h4>
+                        <span class="text-xs text-muted">Strong buying signals</span>
+                    </div>
+                    <div class="p-3 bg-primary-subtle text-primary rounded-3">
+                        <i class="bi bi-graph-up-arrow fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Mention -->
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Identified Budget</span>
+                        <h4 class="fw-bold text-dark mb-0 mt-1">$50,000 / yr</h4>
+                        <span class="text-xs text-muted">Allocated for Q4 deployment</span>
+                    </div>
+                    <div class="p-3 bg-warning-subtle text-warning rounded-3">
+                        <i class="bi bi-wallet2 fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Competitor Mention -->
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Competitors Cited</span>
+                        <h4 class="fw-bold text-danger mb-0 mt-1">Salesforce, Apollo</h4>
+                        <span class="text-xs text-muted">Seeking better AI workflows</span>
+                    </div>
+                    <div class="p-3 bg-danger-subtle text-danger rounded-3">
+                        <i class="bi bi-shield-exclamation fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Conversation Intelligence Card Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Meeting Summary & Key Discussion Points -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-bold">Meeting Summary</span>
+                        <h5 class="fw-bold text-dark mb-0">Discovery Call: Vertex Enterprise Automation</h5>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-light text-secondary border">Duration: 42 mins</span>
+                        <div class="text-xs text-muted mt-1">August 18, 2026</div>
+                    </div>
+                </div>
+
+                <!-- Meeting Meta Details -->
+                <div class="row g-2 mb-4 text-xs">
+                    <div class="col-sm-4">
+                        <span class="text-secondary">Customer Contact:</span>
+                        <strong class="d-block text-dark">Aditya Mehta (VP Ops)</strong>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-secondary">Target Company:</span>
+                        <strong class="d-block text-dark">Vertex Systems Corp</strong>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="text-secondary">CRM Integration:</span>
+                        <span class="badge bg-success-subtle text-success">Synced to Pipeline</span>
+                    </div>
+                </div>
+
+                <!-- Key Discussion Points -->
+                <h6 class="fw-bold text-dark text-xs text-uppercase tracking-wider mb-2">Key Discussion Points</h6>
+                <ul class="list-group list-group-flush mb-3 text-sm">
+                    <li class="list-group-item px-0 py-2 border-0 d-flex align-items-start gap-2">
+                        <i class="bi bi-dot text-primary fs-4 lh-1"></i>
+                        <span>Client currently loses 15+ hours weekly per SDR manually scoring incoming website demo requests.</span>
+                    </li>
+                    <li class="list-group-item px-0 py-2 border-0 d-flex align-items-start gap-2">
+                        <i class="bi bi-dot text-primary fs-4 lh-1"></i>
+                        <span>Evaluated Apollo.io previously but found lead categorization inflexible for vertical SaaS niches.</span>
+                    </li>
+                    <li class="list-group-item px-0 py-2 border-0 d-flex align-items-start gap-2">
+                        <i class="bi bi-dot text-primary fs-4 lh-1"></i>
+                        <span>Confirmed $50,000 budget is pre-approved if pilot achieves &gt;30% win-rate improvement in 60 days.</span>
+                    </li>
+                </ul>
+
+                <!-- Action Items Checklist -->
+                <div class="p-3 bg-light rounded-3 border">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h6 class="fw-bold text-dark text-xs text-uppercase tracking-wider mb-0">
+                            <i class="bi bi-check2-square text-primary me-1"></i> Extracted Action Items
+                        </h6>
+                        <span class="badge bg-primary rounded-pill text-xs">3 Actions</span>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="action1" checked>
+                        <label class="form-check-label text-sm text-dark" for="action1">
+                            Send customized ROI model and pricing breakdown by Friday afternoon.
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="action2">
+                        <label class="form-check-label text-sm text-dark" for="action2">
+                            Share security compliance whitepaper (SOC2 / GDPR) with InfoSec team.
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="action3">
+                        <label class="form-check-label text-sm text-dark" for="action3">
+                            Confirm Technical Demo session with Lead Architect on Tuesday, 2:00 PM EST.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Meeting & Conversation Insights Panel -->
+        <div class="col-lg-5">
+            <!-- Next Meeting Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h6 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar2-check text-warning"></i> Next Scheduled Meeting
+                    </h6>
+                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">Confirmed</span>
+                </div>
+                <div class="p-3 rounded-3 bg-light border mb-3">
+                    <h6 class="fw-bold text-dark mb-1">Technical Architecture Review</h6>
+                    <div class="text-xs text-secondary mb-2">
+                        <i class="bi bi-clock me-1"></i> Tuesday, August 25, 2026 &bull; 2:00 PM – 2:45 PM EST
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary-subtle text-primary border">Zoom Video</span>
+                        <span class="badge bg-light text-dark border">4 Attendees</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary btn-sm rounded-pill w-100 py-2 fw-semibold">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Meeting Agenda
+                </button>
+            </div>
+
+            <!-- Sentiment Breakdown Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <h6 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-pie-chart text-success"></i> Real-Time Sentiment Arc
+                </h6>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="fw-semibold text-success">Positive Receptivity</span>
+                        <span class="fw-bold text-dark">72%</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: 72%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="fw-semibold text-secondary">Neutral Inquiries</span>
+                        <span class="fw-bold text-dark">20%</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-secondary" style="width: 20%;"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="fw-semibold text-danger">Hesitation / Objections</span>
+                        <span class="fw-bold text-dark">8%</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-danger" style="width: 8%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

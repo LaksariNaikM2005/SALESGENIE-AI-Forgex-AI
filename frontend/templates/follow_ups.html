@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}AI Follow-Ups & Cadences — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill text-xs">
+                    <i class="bi bi-bell-fill me-1"></i> Milestone 2 & 4 Automated Cadences
+                </span>
+            </div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">AI Follow-Up Recommendations & Tasks</h2>
+            <p class="text-secondary small mb-0">
+                Action-driven sales reminders, timing recommendations, and multi-channel outreach reminders.
+            </p>
+        </div>
+    </div>
+
+    <!-- Follow Up Cards Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Follow Up 1: High Priority -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 border-start border-4 border-danger">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="badge bg-danger text-white rounded-pill text-xs px-2 py-1">PRIORITY: HIGH</span>
+                    <span class="text-xs text-danger fw-bold"><i class="bi bi-clock-history me-1"></i> Due within 24 Hours</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">Post-Discovery Proposal Follow-up</h5>
+                <div class="text-xs text-secondary mb-3">
+                    <strong>Target:</strong> Aditya Mehta &bull; <strong>Company:</strong> Vertex Systems Corp
+                </div>
+                <div class="p-3 bg-light rounded-3 border mb-3 text-sm">
+                    <div class="text-xs text-uppercase text-secondary fw-semibold mb-1">AI Recommendation & Strategy:</div>
+                    <p class="text-dark mb-0">
+                        Prospect requested pricing model and SOC2 documentation. Send formal PDF proposal highlighting 35% win rate improvement.
+                    </p>
+                </div>
+                <div class="d-flex align-items-center justify-content-between text-xs mt-auto">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary-subtle text-primary border">Email Channel</span>
+                        <span class="badge bg-light text-dark border">Deal Value: $50,000</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <a href="/outreach" class="btn btn-primary btn-sm rounded-pill px-3">Generate Email</a>
+                        <button class="btn btn-outline-success btn-sm rounded-pill px-3" onclick="if(window.showToast) window.showToast('Marked as complete!', 'success'); this.disabled=true; this.textContent='Done';">Complete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Follow Up 2: Medium Priority -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 border-start border-4 border-warning">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="badge bg-warning text-dark rounded-pill text-xs px-2 py-1">PRIORITY: MEDIUM</span>
+                    <span class="text-xs text-secondary fw-semibold"><i class="bi bi-clock me-1"></i> Due in 48 Hours</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">Demo Preparation & Stakeholder Alignment</h5>
+                <div class="text-xs text-secondary mb-3">
+                    <strong>Target:</strong> Sarah Connor &bull; <strong>Company:</strong> Apex Tech Solutions
+                </div>
+                <div class="p-3 bg-light rounded-3 border mb-3 text-sm">
+                    <div class="text-xs text-uppercase text-secondary fw-semibold mb-1">AI Recommendation & Strategy:</div>
+                    <p class="text-dark mb-0">
+                        Confirm Zoom details and send pre-read materials regarding machine learning data preprocessing workflows.
+                    </p>
+                </div>
+                <div class="d-flex align-items-center justify-content-between text-xs mt-auto">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-info-subtle text-info border">LinkedIn & Email</span>
+                        <span class="badge bg-light text-dark border">Deal Value: $25,000</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                        <a href="/outreach" class="btn btn-primary btn-sm rounded-pill px-3">Generate Email</a>
+                        <button class="btn btn-outline-success btn-sm rounded-pill px-3" onclick="if(window.showToast) window.showToast('Marked as complete!', 'success'); this.disabled=true; this.textContent='Done';">Complete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

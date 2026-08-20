@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Agent Sign In — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="auth-wrapper">
+        <div class="auth-card p-4 p-md-5">
+            <!-- Brand & Heading -->
+            <div class="text-center mb-4">
+                <div class="brand-icon-wrapper mx-auto rounded-3 d-flex align-items-center justify-content-center text-white mb-3" style="width: 48px; height: 48px;">
+                    <i class="bi bi-lightning-charge-fill fs-4"></i>
+                </div>
+                <h3 class="fw-bold text-dark tracking-tight mb-1">Agent Sign In</h3>
+                <p class="text-secondary small mb-0">Access the SalesGenie AI pipeline & intelligence console</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="standaloneLoginForm" autocomplete="on">
+                <!-- Username or Email Field -->
+                <div class="mb-3">
+                    <label for="loginUsernameOrEmail" class="form-label fw-semibold text-secondary small">
+                        Username or Email <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="loginUsernameOrEmail" name="username_or_email" placeholder="agent@salesgenie.ai / admin" required autofocus>
+                    </div>
+                </div>
+
+                <!-- Password Field with Show/Hide Toggle -->
+                <div class="mb-3">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <label for="loginPass" class="form-label fw-semibold text-secondary small mb-0">
+                            Password <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-secondary"><i class="bi bi-shield-lock"></i></span>
+                        <input type="password" class="form-control border-start-0 border-end-0 ps-0" id="loginPass" name="password" placeholder="••••••••" required>
+                        <button class="btn btn-light border border-start-0 text-secondary" type="button" id="togglePasswordBtn" title="Toggle password visibility">
+                            <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Alert Box -->
+                <div id="loginPageAlert" class="alert alert-danger small d-none py-2 d-flex align-items-center gap-2 mb-3" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span id="loginPageAlertText">Invalid credentials</span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2 shadow-sm" id="loginPageSubmitBtn">
+                    <span class="spinner-border spinner-border-sm d-none" id="loginPageSpinner"></span>
+                    <i class="bi bi-box-arrow-in-right" id="loginPageIcon"></i>
+                    <span>Sign In with JWT</span>
+                </button>
+            </form>
+
+            <!-- Card Footer / Registration Link -->
+            <div class="text-center mt-4 pt-3 border-top">
+                <p class="text-secondary small mb-0">
+                    New sales agent?
+                    <a href="/register" class="text-primary fw-semibold text-decoration-none">Create an account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Show / Hide Password toggle
+    const toggleBtn = document.getElementById("togglePasswordBtn");
+    const passInput = document.getElementById("loginPass");
+    const passIcon = document.getElementById("togglePasswordIcon");
+
+    if (toggleBtn && passInput && passIcon) {
+        toggleBtn.addEventListener("click", function () {
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                passIcon.className = "bi bi-eye-slash";
+            } else {
+                passInput.type = "password";
+                passIcon.className = "bi bi-eye";
+            }
+        });
+    }
+
+    // Standalone Login Form Submission
+    const form = document.getElementById("standaloneLoginForm");
+    const alertBox = document.getElementById("loginPageAlert");
+    const alertText = document.getElementById("loginPageAlertText");
+    const submitBtn = document.getElementById("loginPageSubmitBtn");
+    const spinner = document.getElementById("loginPageSpinner");
+    const icon = document.getElementById("loginPageIcon");
+
+    if (form) {
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const identifier = document.getElementById("loginUsernameOrEmail").value.trim();
+            const password = document.getElementById("loginPass").value;
+
+            if (!identifier || !password) {
+                alertText.textContent = "Please enter both identifier and password.";
+                alertBox.classList.remove("d-none");
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                spinner.classList.remove("d-none");
+                icon.classList.add("d-none");
+                alertBox.classList.add("d-none");
+
+                const response = await fetch("/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username_or_email: identifier,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    const token = data.data.access_token;
+                    localStorage.setItem("salesgenie_jwt_token", token);
+                    if (window.showToast) window.showToast("Signed in successfully! Redirecting...", "success");
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('index') }}";
+                    }, 500);
+                } else {
+                    alertText.textContent = data.message || "Invalid credentials or user not found.";
+                    alertBox.classList.remove("d-none");
+                }
+            } catch (err) {
+                alertText.textContent = "Network error communicating with authentication service.";
+                alertBox.classList.remove("d-none");
+            } finally {
+                submitBtn.disabled = false;
+                spinner.classList.add("d-none");
+                icon.classList.remove("d-none");
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
