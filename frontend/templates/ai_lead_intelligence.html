@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}AI Lead Intelligence — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill text-xs">
+                    <i class="bi bi-cpu-fill me-1"></i> Milestone 2 AI Intelligence
+                </span>
+            </div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">AI Lead Intelligence & Qualification Engine</h2>
+            <p class="text-secondary small mb-0">
+                Predictive conversion probability, algorithmic engagement scoring, and automated next-best-action recommendations.
+            </p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm" onclick="window.location.reload()">
+                <i class="bi bi-arrow-clockwise me-1"></i> Refresh Intelligence
+            </button>
+        </div>
+    </div>
+
+    <!-- Top AI Metric Overview -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Scoring Algorithm</span>
+                        <h4 class="fw-bold text-dark mb-0 mt-1">RandomForest</h4>
+                        <span class="text-xs text-muted">scikit-learn classifier v1.4</span>
+                    </div>
+                    <div class="p-3 bg-primary-subtle text-primary rounded-3">
+                        <i class="bi bi-diagram-3-fill fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Hot Lead Threshold</span>
+                        <h4 class="fw-bold text-danger mb-0 mt-1">Score &ge; 90%</h4>
+                        <span class="text-xs text-muted">Immediate sales intervention</span>
+                    </div>
+                    <div class="p-3 bg-danger-subtle text-danger rounded-3">
+                        <i class="bi bi-fire fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-0 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <span class="text-xs text-uppercase text-secondary fw-semibold">Qualification Ratio</span>
+                        <h4 class="fw-bold text-success mb-0 mt-1">Score &ge; 70%</h4>
+                        <span class="text-xs text-muted">High conversion potential</span>
+                    </div>
+                    <div class="p-3 bg-success-subtle text-success rounded-3">
+                        <i class="bi bi-check2-circle fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Intelligence Workspace -->
+    <div class="row g-4 mb-4">
+        <!-- Interactive AI Intelligence Scoring Simulator -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-sliders text-primary"></i> Scoring Factors & Feature Simulator
+                    </h5>
+                    <span class="badge bg-light text-secondary border">Real-time Model</span>
+                </div>
+                <p class="text-secondary small mb-4">
+                    Adjust behavioral parameters to simulate conversion likelihood and review next-best-action logic.
+                </p>
+
+                <div class="row g-3 mb-4">
+                    <!-- Factor 1: Email Opens -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary d-flex justify-content-between">
+                            <span>Email Opens Count</span>
+                            <span class="fw-bold text-primary" id="emailValLabel">15</span>
+                        </label>
+                        <input type="range" class="form-range" id="intelEmailOpens" min="0" max="40" value="15">
+                        <div class="d-flex justify-content-between text-xs text-muted">
+                            <span>0 opens</span>
+                            <span>40 opens</span>
+                        </div>
+                    </div>
+
+                    <!-- Factor 2: Website Visits -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary d-flex justify-content-between">
+                            <span>Website Visits Count</span>
+                            <span class="fw-bold text-primary" id="visitValLabel">22</span>
+                        </label>
+                        <input type="range" class="form-range" id="intelWebsiteVisits" min="0" max="60" value="22">
+                        <div class="d-flex justify-content-between text-xs text-muted">
+                            <span>0 visits</span>
+                            <span>60 visits</span>
+                        </div>
+                    </div>
+
+                    <!-- Factor 3: Company Growth -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">Company Growth Rate</label>
+                        <select class="form-select form-select-sm" id="intelCompanyGrowth">
+                            <option value="high" selected>High Growth (&gt; 30% YoY)</option>
+                            <option value="moderate">Moderate Growth (10–30% YoY)</option>
+                            <option value="stable">Stable / Flat (&lt; 10% YoY)</option>
+                        </select>
+                    </div>
+
+                    <!-- Factor 4: Industry Match -->
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold text-secondary">ICP Industry Match</label>
+                        <select class="form-select form-select-sm" id="intelIndustryMatch">
+                            <option value="exact" selected>Exact Tier-1 ICP (Software / AI)</option>
+                            <option value="secondary">Secondary ICP (Telecom / Logistics)</option>
+                            <option value="general">Broad Match (Other)</option>
+                        </select>
+                    </div>
+
+                    <!-- Factor 5: Demo Request -->
+                    <div class="col-12">
+                        <div class="p-3 bg-light rounded-3 border d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-0">Direct Demo Requested</h6>
+                                <small class="text-secondary text-xs">Strongest high-intent conversion signal</small>
+                            </div>
+                            <div class="form-check form-switch fs-5">
+                                <input class="form-check-input" type="checkbox" id="intelDemoRequest" checked>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-auto">
+                    <button class="btn btn-primary w-100 rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" id="recalculateIntelBtn">
+                        <i class="bi bi-cpu"></i>
+                        <span>Re-evaluate Intelligence Score</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Output & Next Best Action Panel -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="fw-bold text-dark mb-0">AI Intelligence Output</h5>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                        <i class="bi bi-stars me-1"></i> AI Powered
+                    </span>
+                </div>
+
+                <!-- Score Meter Card -->
+                <div class="p-3 rounded-3 bg-light border mb-3 text-center">
+                    <span class="text-xs text-uppercase text-secondary fw-bold tracking-wider">Computed Lead Score</span>
+                    <div class="display-5 fw-bold text-dark my-1" id="intelScoreDisplay">92 / 100</div>
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+                        <span id="intelStatusBadge" class="category-badge category-hot">
+                            <span class="pulse-indicator"></span> HOT LEAD
+                        </span>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                            Conversion Likelihood: <strong id="intelConvProbDisplay">88%</strong>
+                        </span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div id="intelProgressBar" class="progress-bar bg-danger" style="width: 92%;"></div>
+                    </div>
+                </div>
+
+                <!-- Scoring Factors Breakdown -->
+                <h6 class="fw-bold text-dark small text-uppercase tracking-wider mb-2">Factor Weights</h6>
+                <div class="d-flex flex-column gap-2 mb-3">
+                    <div class="d-flex justify-content-between align-items-center text-xs">
+                        <span class="text-secondary"><i class="bi bi-check-circle-fill text-success me-1"></i> Company Growth</span>
+                        <span class="badge bg-light text-dark border">High Impact (+15%)</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center text-xs">
+                        <span class="text-secondary"><i class="bi bi-check-circle-fill text-success me-1"></i> Industry ICP Match</span>
+                        <span class="badge bg-light text-dark border">Tier 1 (+20%)</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center text-xs">
+                        <span class="text-secondary"><i class="bi bi-check-circle-fill text-success me-1"></i> Email & Web Engagement</span>
+                        <span class="badge bg-light text-dark border">Active (+22%)</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center text-xs">
+                        <span class="text-secondary"><i class="bi bi-check-circle-fill text-success me-1"></i> Demo Engagement</span>
+                        <span class="badge bg-light text-dark border">Confirmed (+35%)</span>
+                    </div>
+                </div>
+
+                <!-- Next Best Action Recommendation -->
+                <div class="card border-primary p-3 bg-primary-subtle bg-opacity-25 rounded-3 mt-auto">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="badge bg-danger text-white rounded-pill text-xs px-2 py-1">High Priority</span>
+                        <small class="text-muted text-xs">AI Recommendation</small>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-1" id="intelNextActionTitle">Next Best Action: Schedule Product Demo</h6>
+                    <p class="text-secondary text-xs mb-0" id="intelActionReason">
+                        Lead exhibits peak engagement signals and high ICP alignment. Recommended action is direct executive presentation within 24 hours.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ai.js') }}"></script>
+{% endblock %}

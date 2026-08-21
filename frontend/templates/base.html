@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SalesGenie AI - Intelligent Lead Scoring, Sales Pipeline Management, and Revenue Forecasting Platform">
-    <title>{% block title %}SalesGenie AI — Intelligent Sales & Pipeline Management{% endblock %}</title>
+    <title>{% block title %}SalesGenie AI — Intelligent Sales & Lead Intelligence Platform{% endblock %}</title>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -21,85 +21,239 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
     <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-body-tertiary d-flex flex-column min-vh-100">
+<body class="bg-body-tertiary{% if request.path == '/login' or request.path == '/register' %} auth-page{% endif %}">
 
-    <!-- Top Navigation Bar -->
-    <header class="navbar navbar-expand-lg sticky-top custom-navbar shadow-sm bg-white border-bottom">
-        <div class="container-fluid px-lg-4">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('index') }}">
+    <!-- ==========================================================================
+         SaaS CRM LEFT SIDEBAR LAYOUT
+         Authentication pages reuse the same single Jinja content block.
+         CSS hides CRM chrome on /login and /register.
+         ========================================================================== -->
+
+    <!-- Desktop Fixed Left Sidebar -->
+    <aside class="app-sidebar d-none d-lg-flex">
+        <!-- Sidebar Brand Header -->
+        <div class="sidebar-header">
+            <a class="d-flex align-items-center gap-2 text-decoration-none" href="{{ url_for('index') }}">
                 <div class="brand-icon-wrapper d-flex align-items-center justify-content-center text-white rounded-3">
                     <i class="bi bi-lightning-charge-fill fs-5"></i>
                 </div>
                 <div>
                     <span class="fw-bold tracking-tight text-dark brand-title">SalesGenie<span class="text-primary">.AI</span></span>
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-2 text-xs">ForgeX</span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill ms-1 text-xs">v2.4</span>
                 </div>
             </a>
+        </div>
 
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- Vertical Navigation Links -->
+        <ul class="sidebar-nav">
+            <!-- Main -->
+            <li class="sidebar-nav-title">Main</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/' or request.path == '/dashboard' %}active{% endif %}" href="{{ url_for('index') }}">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/add' %}active{% endif %}" href="{{ url_for('add_lead') }}">
+                    <i class="bi bi-person-plus-fill"></i>
+                    <span>Add Lead</span>
+                </a>
+            </li>
 
-            <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded-2 fw-medium {% if request.endpoint == 'index' %}active text-primary bg-primary-subtle{% endif %}" href="{{ url_for('index') }}">
-                            <i class="bi bi-grid-1x2-fill me-1"></i> Pipeline Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-2 rounded-2 fw-medium {% if request.endpoint == 'add_lead' %}active text-primary bg-primary-subtle{% endif %}" href="{{ url_for('add_lead') }}">
-                            <i class="bi bi-person-plus-fill me-1"></i> Add Lead
-                        </a>
-                    </li>
-                </ul>
+            <!-- CRM -->
+            <li class="sidebar-nav-title">CRM</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/company-details' %}active{% endif %}" href="/company-details">
+                    <i class="bi bi-building-fill text-primary"></i>
+                    <span>Companies</span>
+                </a>
+            </li>
 
-                <!-- Right Utility Bar -->
-                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                    <!-- Quick Add Lead Button -->
-                    <button class="btn btn-primary d-flex align-items-center gap-2 rounded-pill px-3 shadow-sm btn-sm" data-bs-toggle="modal" data-bs-target="#quickAddLeadModal">
-                        <i class="bi bi-plus-circle-fill"></i>
-                        <span>Quick Add</span>
-                    </button>
+            <!-- AI & Intelligence -->
+            <li class="sidebar-nav-title">AI & Intelligence</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/ai-lead-intelligence' %}active{% endif %}" href="/ai-lead-intelligence">
+                    <i class="bi bi-cpu-fill text-primary"></i>
+                    <span>AI Lead Intelligence</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/outreach' %}active{% endif %}" href="/outreach">
+                    <i class="bi bi-envelope-paper-heart-fill text-info"></i>
+                    <span>Outreach</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/conversation-intelligence' %}active{% endif %}" href="/conversation-intelligence">
+                    <i class="bi bi-chat-quote-fill text-success"></i>
+                    <span>Conversation Intelligence</span>
+                </a>
+            </li>
 
-                    <!-- Auth Button / User Profile Pill -->
-                    <div id="authContainer" class="d-flex align-items-center">
-                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#authModal" id="loginBtnTrigger">
-                            <i class="bi bi-person-circle"></i>
-                            <span id="authLabel">Agent Sign In</span>
-                        </button>
-                    </div>
+            <!-- Sales -->
+            <li class="sidebar-nav-title">Sales</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/meetings' %}active{% endif %}" href="/meetings">
+                    <i class="bi bi-calendar2-week-fill text-warning"></i>
+                    <span>Meetings</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/follow-ups' %}active{% endif %}" href="/follow-ups">
+                    <i class="bi bi-bell-fill text-danger"></i>
+                    <span>Follow-Ups</span>
+                </a>
+            </li>
+
+            <!-- Analytics -->
+            <li class="sidebar-nav-title">Analytics</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/reports' %}active{% endif %}" href="/reports">
+                    <i class="bi bi-file-earmark-bar-graph-fill text-secondary"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/notifications' %}active{% endif %}" href="/notifications">
+                    <i class="bi bi-broadcast text-primary"></i>
+                    <span>Activity Stream</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Sidebar Bottom User / Settings Section -->
+        <div class="sidebar-footer">
+            <div class="d-flex flex-column gap-2">
+                <div id="sidebarAuthArea" class="pt-2">
+                    <a href="/login" class="btn btn-outline-secondary btn-sm w-100 rounded-pill py-2 d-flex align-items-center justify-content-center gap-2 text-xs fw-semibold" id="sidebarLoginBtn">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        <span>Agent Sign In</span>
+                    </a>
                 </div>
             </div>
         </div>
-    </header>
+    </aside>
 
-    <!-- Toast Notification Container (Floating Top-Right) -->
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
-        <div id="actionToast" class="toast align-items-center border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body d-flex align-items-center gap-2" id="toastMessage">
-                    <i class="bi bi-check-circle-fill text-success fs-5" id="toastIcon"></i>
-                    <span id="toastText">Action completed successfully</span>
+    <!-- Mobile Offcanvas Sidebar (Tablet & Phones) -->
+    <div class="offcanvas offcanvas-start border-0 shadow-lg" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+        <div class="offcanvas-header border-bottom py-3 px-4">
+            <div class="d-flex align-items-center gap-2">
+                <div class="brand-icon-wrapper d-flex align-items-center justify-content-center text-white rounded-3">
+                    <i class="bi bi-lightning-charge-fill fs-5"></i>
                 </div>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <span class="fw-bold tracking-tight text-dark brand-title">SalesGenie<span class="text-primary">.AI</span></span>
+            </div>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-3 d-flex flex-column">
+            <ul class="sidebar-nav px-0">
+                <li class="sidebar-nav-title">Main</li>
+                <li><a class="sidebar-link {% if request.path == '/' or request.path == '/dashboard' %}active{% endif %}" href="{{ url_for('index') }}"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
+                <li><a class="sidebar-link {% if request.path == '/add' %}active{% endif %}" href="{{ url_for('add_lead') }}"><i class="bi bi-person-plus-fill"></i><span>Add Lead</span></a></li>
+                
+                <li class="sidebar-nav-title">CRM</li>
+                <li>
+                    <a class="sidebar-link {% if request.path == '/company-details' %}active{% endif %}" href="/company-details">
+                        <i class="bi bi-building-fill text-primary"></i>
+                        <span>Companies</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-title">AI & Intelligence</li>
+                <li><a class="sidebar-link {% if request.path == '/ai-lead-intelligence' %}active{% endif %}" href="/ai-lead-intelligence"><i class="bi bi-cpu-fill text-primary"></i><span>AI Lead Intelligence</span></a></li>
+                <li><a class="sidebar-link {% if request.path == '/outreach' %}active{% endif %}" href="/outreach"><i class="bi bi-envelope-paper-heart-fill text-info"></i><span>Outreach</span></a></li>
+                <li><a class="sidebar-link {% if request.path == '/conversation-intelligence' %}active{% endif %}" href="/conversation-intelligence"><i class="bi bi-chat-quote-fill text-success"></i><span>Conversation Intelligence</span></a></li>
+                
+                <li class="sidebar-nav-title">Sales</li>
+                <li><a class="sidebar-link {% if request.path == '/meetings' %}active{% endif %}" href="/meetings"><i class="bi bi-calendar2-week-fill text-warning"></i><span>Meetings</span></a></li>
+                <li><a class="sidebar-link {% if request.path == '/follow-ups' %}active{% endif %}" href="/follow-ups"><i class="bi bi-bell-fill text-danger"></i><span>Follow-Ups</span></a></li>
+                
+                <li class="sidebar-nav-title">Analytics</li>
+                <li><a class="sidebar-link {% if request.path == '/reports' %}active{% endif %}" href="/reports"><i class="bi bi-file-earmark-bar-graph-fill text-secondary"></i><span>Reports</span></a></li>
+                <li><a class="sidebar-link {% if request.path == '/notifications' %}active{% endif %}" href="/notifications"><i class="bi bi-broadcast text-primary"></i><span>Activity Stream</span></a></li>
+            </ul>
+            <div class="mt-auto pt-3 border-top" id="mobileSidebarAuthArea">
+                <a href="/login" class="btn btn-outline-secondary btn-sm w-100 rounded-pill py-2 text-xs fw-semibold">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Agent Sign In
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow-1">
-        {% block content %}{% endblock %}
-    </main>
+    <!-- Main Content Area (To the right of Fixed Sidebar) -->
+    <div class="app-main">
+        <!-- Clean Top Header -->
+        <header class="app-header">
+            <!-- Left: Mobile Toggle & Page Breadcrumb -->
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light btn-sm border d-lg-none shadow-none rounded-3 px-2 py-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
+                <div class="d-none d-sm-block">
+                    <span class="text-xs text-uppercase text-secondary fw-bold tracking-wider">Workspace Console</span>
+                    <div class="fw-bold text-dark text-sm lh-1">SalesGenie AI &bull; Production CRM</div>
+                </div>
+            </div>
 
-    <!-- Global Quick Add Modal -->
+            <!-- Right: Quick Actions & Notification Bell & Profile -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Global Quick Add Lead Trigger -->
+                <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#quickAddLeadModal">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span class="d-none d-sm-inline">Quick Add</span>
+                </button>
+
+                <!-- Notification Bell Link -->
+                <a href="/notifications" class="btn btn-light btn-sm rounded-circle p-0 border position-relative d-flex align-items-center justify-content-center shadow-none" style="width: 36px; height: 36px;" title="Activity Notifications">
+                    <i class="bi bi-bell text-secondary"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                        <span class="visually-hidden">New alerts</span>
+                    </span>
+                </a>
+
+                <!-- Header User / Auth Badge Area -->
+                <div id="headerAuthContainer" class="d-flex align-items-center">
+                    <a href="/login" class="btn btn-outline-secondary btn-sm rounded-pill px-3 d-flex align-items-center gap-1">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="d-none d-md-inline">Sign In</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Body -->
+        <div class="app-content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Clean Footer -->
+        <footer class="app-footer">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between text-secondary text-xs gap-2">
+                <div>
+                    <span class="fw-semibold text-dark">SalesGenie AI</span> &copy; 2026 ForgeX AI Pipeline Engine. All rights reserved.
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                        <i class="bi bi-circle-fill me-1" style="font-size: 6px;"></i> API Online
+                    </span>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
+                        <i class="bi bi-cpu-fill me-1"></i> ML RandomForest Active
+                    </span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Global Quick Add Lead Modal -->
     <div class="modal fade" id="quickAddLeadModal" tabindex="-1" aria-labelledby="quickAddLeadModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-gradient-primary text-white border-0 px-4 py-3 rounded-top-4">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-gradient-primary text-white border-0 px-4 py-3">
                     <div class="d-flex align-items-center gap-2">
                         <div class="bg-white text-primary rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
                             <i class="bi bi-building-fill-add"></i>
@@ -173,7 +327,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer bg-light px-4 py-3 border-0 rounded-bottom-4">
+                    <div class="modal-footer bg-light px-4 py-3 border-0">
                         <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2" id="quickAddSubmitBtn">
                             <span class="spinner-border spinner-border-sm d-none" id="quickAddSpinner"></span>
@@ -186,102 +340,29 @@
         </div>
     </div>
 
-    <!-- Agent Authentication Modal (JWT Auth) -->
-    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="modal-header bg-dark text-white border-0 px-4 py-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-shield-lock text-primary fs-5"></i>
-                        <h5 class="modal-title fw-bold" id="authModalLabel">Agent Authentication</h5>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Floating Toast Notifications Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+        <div id="actionToast" class="toast align-items-center border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2" id="toastMessage">
+                    <i class="bi bi-check-circle-fill text-success fs-5" id="toastIcon"></i>
+                    <span id="toastText">Action completed successfully</span>
                 </div>
-                <div class="modal-body p-4">
-                    <ul class="nav nav-pills nav-fill mb-3" id="authTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active rounded-pill fw-semibold" id="login-tab" data-bs-toggle="pill" data-bs-target="#loginTabPane" type="button" role="tab">Sign In</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-pill fw-semibold" id="register-tab" data-bs-toggle="pill" data-bs-target="#registerTabPane" type="button" role="tab">Register</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="authTabContent">
-                        <!-- Sign In Tab -->
-                        <div class="tab-pane fade show active" id="loginTabPane" role="tabpanel">
-                            <form id="loginForm">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-secondary">Username or Email</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
-                                        <input type="text" class="form-control" id="loginIdentifier" required placeholder="admin / agent@salesgenie.ai">
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-secondary">Password</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
-                                        <input type="password" class="form-control" id="loginPassword" required placeholder="••••••••">
-                                    </div>
-                                </div>
-                                <div id="loginAlert" class="alert alert-danger small d-none py-2"></div>
-                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" id="loginSubmitBtn">
-                                    <span class="spinner-border spinner-border-sm d-none" id="loginSpinner"></span>
-                                    <span>Sign In with JWT</span>
-                                </button>
-                            </form>
-                        </div>
-                        <!-- Register Tab -->
-                        <div class="tab-pane fade" id="registerTabPane" role="tabpanel">
-                            <form id="registerForm">
-                                <div class="mb-2">
-                                    <label class="form-label small fw-semibold text-secondary">Username</label>
-                                    <input type="text" class="form-control" id="regUsername" required placeholder="sales_agent_01">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label small fw-semibold text-secondary">Email Address</label>
-                                    <input type="email" class="form-control" id="regEmail" required placeholder="agent@salesgenie.ai">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-semibold text-secondary">Password</label>
-                                    <input type="password" class="form-control" id="regPassword" required placeholder="••••••••">
-                                </div>
-                                <div id="registerAlert" class="alert alert-danger small d-none py-2"></div>
-                                <button type="submit" class="btn btn-success w-100 rounded-pill py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" id="registerSubmitBtn">
-                                    <span class="spinner-border spinner-border-sm d-none" id="registerSpinner"></span>
-                                    <span>Create Agent Account</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-auto py-3 bg-white border-top">
-        <div class="container-fluid px-lg-4 d-flex flex-column flex-md-row align-items-center justify-content-between text-secondary small gap-2">
-            <div>
-                <span class="fw-semibold text-dark">SalesGenie AI</span> &copy; 2026 ForgeX AI Pipeline Engine. All rights reserved.
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
-                    <i class="bi bi-circle-fill me-1 text-xs"></i> API Server Online
-                </span>
-                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
-                    <i class="bi bi-cpu-fill me-1"></i> ML RandomForest Engine Active
-                </span>
-            </div>
-        </div>
-    </footer>
-
     <!-- Bootstrap 5.3.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-    <!-- Custom Frontend Application JS -->
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <!-- Modular Application JS Scripts -->
+    <script src="{{ url_for('static', filename='js/leads.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ai.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/automation.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

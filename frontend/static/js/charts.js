@@ -1,4 +1,7 @@
 // SalesGenie AI - Pipeline & Analytics Visualizations
+// Teammate requested color hierarchy:
+// New Lead -> Blue (#3b82f6), Qualified -> Teal (#0d9488), Proposal -> Purple (#8b5cf6), Negotiation -> Orange (#f97316), Closed Won -> Green (#10b981)
+
 document.addEventListener("DOMContentLoaded", function () {
     initPipelineStageChart();
     initLeadCategoryChart();
@@ -30,8 +33,8 @@ function initPipelineStageChart() {
         }
     });
 
-    const labels = Object.keys(stageCounts);
-    const data = Object.values(stageCounts);
+    const labels = ["New Lead", "Qualified", "Proposal", "Negotiation", "Closed Won"];
+    const data = labels.map(l => stageCounts[l] || 0);
 
     if (stageChartInstance) {
         stageChartInstance.destroy();
@@ -42,25 +45,13 @@ function initPipelineStageChart() {
         data: {
             labels: labels,
             datasets: [{
-                label: "Number of Leads",
+                label: "Leads in Stage",
                 data: data,
-                backgroundColor: [
-                    "rgba(100, 116, 139, 0.75)", // New Lead (Slate)
-                    "rgba(59, 130, 246, 0.75)",  // Qualified (Blue)
-                    "rgba(139, 92, 246, 0.75)",  // Proposal (Purple)
-                    "rgba(245, 158, 11, 0.75)",  // Negotiation (Amber)
-                    "rgba(16, 185, 129, 0.75)"   // Closed Won (Emerald)
-                ],
-                borderColor: [
-                    "#64748b",
-                    "#3b82f6",
-                    "#8b5cf6",
-                    "#f59e0b",
-                    "#10b981"
-                ],
+                backgroundColor: "rgba(59, 130, 246, 0.85)",
+                borderColor: "#3b82f6",
                 borderWidth: 1.5,
-                borderRadius: 6,
-                barPercentage: 0.6
+                borderRadius: 8,
+                barPercentage: 0.55
             }]
         },
         options: {
@@ -74,7 +65,7 @@ function initPipelineStageChart() {
                     backgroundColor: "#0f172a",
                     titleFont: { family: "Plus Jakarta Sans", weight: "bold" },
                     bodyFont: { family: "Plus Jakarta Sans" },
-                    padding: 10,
+                    padding: 12,
                     cornerRadius: 8
                 }
             },
@@ -92,8 +83,8 @@ function initPipelineStageChart() {
                 },
                 x: {
                     ticks: {
-                        font: { family: "Plus Jakarta Sans", size: 11, weight: "500" },
-                        color: "#475569"
+                        font: { family: "Plus Jakarta Sans", size: 11, weight: "600" },
+                        color: "#334155"
                     },
                     grid: {
                         display: false
@@ -108,8 +99,10 @@ function initLeadCategoryChart() {
     const ctx = document.getElementById("leadCategoryChart");
     if (!ctx) return;
 
+    // Milestone 2 Category Definitions: 90-100 Hot, 70-89 Qualified, 50-69 Warm, <50 Cold
     const categoryCounts = {
         "Hot": 0,
+        "Qualified": 0,
         "Warm": 0,
         "Cold": 0
     };
@@ -124,9 +117,11 @@ function initLeadCategoryChart() {
         }
     });
 
-    const total = categoryCounts.Hot + categoryCounts.Warm + categoryCounts.Cold;
-    const labels = ["Hot (Score >= 70)", "Warm (Score 40-69)", "Cold (Score < 40)"];
-    const data = total > 0 ? [categoryCounts.Hot, categoryCounts.Warm, categoryCounts.Cold] : [0, 0, 0];
+    const total = categoryCounts.Hot + categoryCounts.Qualified + categoryCounts.Warm + categoryCounts.Cold;
+    const labels = ["Hot (90-100%)", "Qualified (70-89%)", "Warm (50-69%)", "Cold (<50%)"];
+    const data = total > 0
+        ? [categoryCounts.Hot, categoryCounts.Qualified, categoryCounts.Warm, categoryCounts.Cold]
+        : [0, 0, 0, 0];
 
     if (categoryChartInstance) {
         categoryChartInstance.destroy();
@@ -139,27 +134,28 @@ function initLeadCategoryChart() {
             datasets: [{
                 data: total > 0 ? data : [1],
                 backgroundColor: total > 0 ? [
-                    "#ef4444", // Hot (Red)
-                    "#f59e0b", // Warm (Amber)
-                    "#94a3b8"  // Cold (Slate)
+                    "#ef4444", // Hot -> Red
+                    "#0d9488", // Qualified -> Teal
+                    "#f59e0b", // Warm -> Amber
+                    "#64748b"  // Cold -> Slate
                 ] : ["#e2e8f0"],
                 borderWidth: 2,
                 borderColor: "#ffffff",
-                hoverOffset: 4
+                hoverOffset: 6
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: "70%",
+            cutout: "68%",
             plugins: {
                 legend: {
                     position: "bottom",
                     labels: {
-                        boxWidth: 12,
+                        boxWidth: 10,
                         font: { family: "Plus Jakarta Sans", size: 11, weight: "500" },
                         color: "#475569",
-                        padding: 12
+                        padding: 10
                     }
                 },
                 tooltip: {
@@ -180,7 +176,7 @@ function initLeadCategoryChart() {
     });
 }
 
-// Global hook for live refresh without full reload
+// Global hook for live refresh
 window.refreshPipelineCharts = function () {
     initPipelineStageChart();
     initLeadCategoryChart();

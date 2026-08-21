@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Company Intelligence Profile — SalesGenie AI{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-4">
+
+    <!-- Breadcrumb & Header -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-1">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}" class="text-decoration-none text-primary"><i class="bi bi-grid-1x2-fill me-1"></i>Pipeline</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Company Directory</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+        <div>
+            <h2 class="h3 fw-bold text-dark tracking-tight mb-1">Target Account & Company Directory</h2>
+            <p class="text-secondary small mb-0">
+                Firmographic data, industry categorizations, and account-level revenue potential from data records.
+            </p>
+        </div>
+    </div>
+
+    <!-- Company Grid -->
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 card-hover">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-3 bg-primary-subtle text-primary fw-bold">NW</div>
+                        <h5 class="fw-bold text-dark mb-0">NimbusWorks 1</h5>
+                    </div>
+                    <span class="badge bg-success-subtle text-success">Customer</span>
+                </div>
+                <div class="text-xs text-secondary mb-3">
+                    <div><strong>Industry:</strong> Telecom &bull; <strong>Headcount:</strong> 918 employees</div>
+                    <div><strong>Location:</strong> Mumbai, India</div>
+                </div>
+                <div class="p-3 bg-light rounded-3 border mb-3 text-xs">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-secondary">Annual Revenue:</span>
+                        <strong class="text-dark">$35,951,564</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Funding Stage:</span>
+                        <span class="badge bg-light text-dark border">Bootstrapped</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-auto">
+                    <span class="text-xs text-muted">Contact: Kiran Gupta</span>
+                    <a href="/outreach" class="btn btn-outline-primary btn-sm rounded-pill px-3">Outreach</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 card-hover">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-3 bg-info-subtle text-info fw-bold">NS</div>
+                        <h5 class="fw-bold text-dark mb-0">NovaSystems 2</h5>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary">Prospect</span>
+                </div>
+                <div class="text-xs text-secondary mb-3">
+                    <div><strong>Industry:</strong> Telecom &bull; <strong>Headcount:</strong> 504 employees</div>
+                    <div><strong>Location:</strong> Chennai, India</div>
+                </div>
+                <div class="p-3 bg-light rounded-3 border mb-3 text-xs">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-secondary">Annual Revenue:</span>
+                        <strong class="text-dark">$27,720,027</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Funding Stage:</span>
+                        <span class="badge bg-light text-dark border">Series C</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-auto">
+                    <span class="text-xs text-muted">Contact: Neha Verma</span>
+                    <a href="/outreach" class="btn btn-outline-primary btn-sm rounded-pill px-3">Outreach</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100 card-hover">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 rounded-3 bg-danger-subtle text-danger fw-bold">AL</div>
+                        <h5 class="fw-bold text-dark mb-0">ApexLabs 3</h5>
+                    </div>
+                    <span class="badge bg-warning-subtle text-warning">Lead</span>
+                </div>
+                <div class="text-xs text-secondary mb-3">
+                    <div><strong>Industry:</strong> Telecom &bull; <strong>Headcount:</strong> 936 employees</div>
+                    <div><strong>Location:</strong> Pune, India</div>
+                </div>
+                <div class="p-3 bg-light rounded-3 border mb-3 text-xs">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="text-secondary">Annual Revenue:</span>
+                        <strong class="text-dark">$35,327,794</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-secondary">Funding Stage:</span>
+                        <span class="badge bg-light text-dark border">Series A</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mt-auto">
+                    <span class="text-xs text-muted">Contact: Aditya Das</span>
+                    <a href="/outreach" class="btn btn-outline-primary btn-sm rounded-pill px-3">Outreach</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

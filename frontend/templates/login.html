@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Agent Sign In — SalesGenie AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="standalone-auth-layout">
+
+<div class="auth-wrapper">
+    <div class="auth-card p-4 p-md-5">
+
+        <div class="text-center mb-4">
+
+            <div class="brand-icon-wrapper mx-auto rounded-3
+                        d-flex align-items-center justify-content-center
+                        text-white mb-3"
+                 style="width:48px;height:48px;">
+
+                <i class="bi bi-lightning-charge-fill fs-4"></i>
+
+            </div>
+
+            <h3 class="fw-bold text-dark mb-1">
+                Agent Sign In
+            </h3>
+
+            <p class="text-secondary small mb-0">
+                Access the SalesGenie AI pipeline & intelligence console
+            </p>
+
+        </div>
+
+
+        <form id="standaloneLoginForm" autocomplete="on">
+
+            <div class="mb-3">
+
+                <label for="loginUsernameOrEmail"
+                       class="form-label fw-semibold text-secondary small">
+
+                    Username or Email
+                    <span class="text-danger">*</span>
+
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-person"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        class="form-control border-start-0 ps-0"
+                        id="loginUsernameOrEmail"
+                        name="username_or_email"
+                        placeholder="agent@salesgenie.ai / admin"
+                        required
+                        autofocus>
+
+                </div>
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label for="loginPass"
+                       class="form-label fw-semibold text-secondary small">
+
+                    Password
+                    <span class="text-danger">*</span>
+
+                </label>
+
+                <div class="input-group">
+
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="bi bi-shield-lock"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        class="form-control border-start-0"
+                        id="loginPass"
+                        name="password"
+                        placeholder="••••••••"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <div id="loginPageAlert"
+                 class="alert alert-danger small d-none"
+                 role="alert">
+
+                <span id="loginPageAlertText">
+                    Invalid credentials
+                </span>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary w-100 rounded-pill py-2 fw-semibold"
+                id="loginPageSubmitBtn">
+
+                <span
+                    class="spinner-border spinner-border-sm d-none"
+                    id="loginPageSpinner">
+                </span>
+
+                <i class="bi bi-box-arrow-in-right"
+                   id="loginPageIcon"></i>
+
+                <span>Sign In with JWT</span>
+
+            </button>
+
+        </form>
+
+
+        <div class="text-center mt-4 pt-3 border-top">
+
+            <p class="text-secondary small mb-0">
+
+                New sales agent?
+
+                <a href="/register"
+                   class="text-primary fw-semibold text-decoration-none">
+
+                    Create an account
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form =
+        document.getElementById("standaloneLoginForm");
+
+    const alertBox =
+        document.getElementById("loginPageAlert");
+
+    const alertText =
+        document.getElementById("loginPageAlertText");
+
+    const submitBtn =
+        document.getElementById("loginPageSubmitBtn");
+
+    const spinner =
+        document.getElementById("loginPageSpinner");
+
+    const icon =
+        document.getElementById("loginPageIcon");
+
+
+    form.addEventListener("submit", async function (e) {
+
+        e.preventDefault();
+
+        const identifier =
+            document.getElementById("loginUsernameOrEmail")
+            .value.trim();
+
+        const password =
+            document.getElementById("loginPass").value;
+
+
+        if (!identifier || !password) {
+
+            alertText.textContent =
+                "Please enter both identifier and password.";
+
+            alertBox.classList.remove("d-none");
+
+            return;
+        }
+
+
+        submitBtn.disabled = true;
+
+        spinner.classList.remove("d-none");
+
+        icon.classList.add("d-none");
+
+        alertBox.classList.add("d-none");
+
+
+        try {
+
+            const response = await fetch("/auth/login", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    username_or_email: identifier,
+                    password: password
+                })
+
+            });
+
+
+            const data = await response.json();
+
+
+            if (response.ok && data.success) {
+
+                const token =
+                    data.data.access_token;
+
+                localStorage.setItem(
+                    "salesgenie_jwt_token",
+                    token
+                );
+
+                window.location.href = "/";
+
+            } else {
+
+                alertText.textContent =
+                    data.message ||
+                    "Invalid credentials or user not found.";
+
+                alertBox.classList.remove("d-none");
+
+            }
+
+        } catch (err) {
+
+            alertText.textContent =
+                "Network error communicating with authentication service.";
+
+            alertBox.classList.remove("d-none");
+
+        }
+
+
+        submitBtn.disabled = false;
+
+        spinner.classList.add("d-none");
+
+        icon.classList.remove("d-none");
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
