@@ -65,6 +65,15 @@
                 </a>
             </li>
 
+            <!-- CRM -->
+            <li class="sidebar-nav-title">CRM</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/company-details' %}active{% endif %}" href="/company-details">
+                    <i class="bi bi-building-fill text-primary"></i>
+                    <span>Companies</span>
+                </a>
+            </li>
+
             <!-- AI & Intelligence -->
             <li class="sidebar-nav-title">AI & Intelligence</li>
             <li>
@@ -103,6 +112,12 @@
 
             <!-- Analytics -->
             <li class="sidebar-nav-title">Analytics</li>
+            <li>
+                <a class="sidebar-link {% if request.path == '/reports' %}active{% endif %}" href="/reports">
+                    <i class="bi bi-graph-up-arrow text-primary"></i>
+                    <span>Analytics</span>
+                </a>
+            </li>
             <li>
                 <a class="sidebar-link {% if request.path == '/reports' %}active{% endif %}" href="/reports">
                     <i class="bi bi-file-earmark-bar-graph-fill text-secondary"></i>
@@ -147,6 +162,14 @@
                 <li><a class="sidebar-link {% if request.path == '/' or request.path == '/dashboard' %}active{% endif %}" href="{{ url_for('index') }}"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a></li>
                 <li><a class="sidebar-link {% if request.path == '/add' %}active{% endif %}" href="{{ url_for('add_lead') }}"><i class="bi bi-person-plus-fill"></i><span>Add Lead</span></a></li>
                 
+                <li class="sidebar-nav-title">CRM</li>
+                <li>
+                    <a class="sidebar-link {% if request.path == '/company-details' %}active{% endif %}" href="/company-details">
+                        <i class="bi bi-building-fill text-primary"></i>
+                        <span>Companies</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-nav-title">AI & Intelligence</li>
                 <li><a class="sidebar-link {% if request.path == '/ai-lead-intelligence' %}active{% endif %}" href="/ai-lead-intelligence"><i class="bi bi-cpu-fill text-primary"></i><span>AI Lead Intelligence</span></a></li>
                 <li><a class="sidebar-link {% if request.path == '/outreach' %}active{% endif %}" href="/outreach"><i class="bi bi-envelope-paper-heart-fill text-info"></i><span>Outreach</span></a></li>
