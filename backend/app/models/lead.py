@@ -1,0 +1,119 @@
+from datetime import datetime, timezone
+
+from ..extensions import db
+
+
+class Lead(db.Model):
+    __tablename__ = "leads"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    company = db.Column(
+        db.String(255),
+        nullable=False,
+        index=True,
+    )
+
+    contact_name = db.Column(
+        db.String(120),
+        nullable=True,
+    )
+
+    email = db.Column(
+        db.String(255),
+        nullable=True,
+        index=True,
+    )
+
+    phone = db.Column(
+        db.String(50),
+        nullable=True,
+    )
+
+    stage = db.Column(
+        db.String(50),
+        nullable=False,
+        default="New Lead",
+        index=True,
+    )
+
+    status = db.Column(
+        db.String(50),
+        nullable=False,
+        default="Open",
+        index=True,
+    )
+
+    value = db.Column(
+        db.Float,
+        nullable=False,
+        default=0.0,
+    )
+
+    lead_score = db.Column(
+        db.Float,
+        nullable=True,
+    )
+
+    purchase_probability = db.Column(
+        db.Float,
+        nullable=True,
+    )
+
+    last_contact_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=True,
+    )
+
+    response_time = db.Column(
+        db.Float,
+        nullable=True,
+    )
+
+    sales_cycle = db.Column(
+        db.Float,
+        nullable=True,
+    )
+
+    assigned_to = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=True,
+        index=True,
+    )
+
+    created_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    updated_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    assigned_user = db.relationship(
+        "User",
+        back_populates="leads",
+    )
+
+    activities = db.relationship(
+        "LeadActivity",
+        back_populates="lead",
+        cascade="all, delete-orphan",
+    )
+
+    recommendations = db.relationship(
+        "AIRecommendation",
+        back_populates="lead",
+        cascade="all, delete-orphan",
+    )
+
+    follow_ups = db.relationship(
+        "FollowUpHistory",
+        back_populates="lead",
+        cascade="all, delete-orphan",
+    )
