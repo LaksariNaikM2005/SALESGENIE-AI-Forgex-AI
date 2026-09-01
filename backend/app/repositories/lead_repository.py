@@ -27,7 +27,10 @@ def create_lead(data):
     )
 
     db.session.add(lead)
-    db.session.commit()
+    # Generate the ID without committing yet.
+    # This allows ML prediction and database save
+    # to happen as one transaction.
+    db.session.flush()
 
     return lead
 

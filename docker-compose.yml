@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - APP_NAME=FORGE_X_AI
+      - APP_ENV=production
+      - DEBUG=false
+      - DATABASE_URL=sqlite:///app/database/forge_x_ai.db
+      - JWT_SECRET_KEY=q4Tvn-StGSzlLr8JB83RwohGeC-r3mDLYlumZEq3Pw9R0ZJuhmuJiWjfjQrxNPGOnG5J3hlz4mK3imvElxnm5A
+    volumes:
+      - ./database:/app/database
+      - ./ai_ml_engine/models:/app/ai_ml_engine/models
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+networks:
+  default:
+    name: salesgenie-network

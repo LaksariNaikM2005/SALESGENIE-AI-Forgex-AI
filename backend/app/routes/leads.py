@@ -101,3 +101,33 @@ def delete(lead_id):
     return {
         "message": "Lead deleted successfully"
     }, 200
+
+
+@leads_bp.post("/<int:lead_id>/score")
+@jwt_required()
+def score_lead(lead_id):
+    lead_obj = find_lead(lead_id)
+    if not lead_obj:
+        return {"error": "Lead not found"}, 404
+
+    # Run ML prediction model
+    from ai_ml_engine.inference.predict import predict_lead
+    prediction = predict_lead({
+        "account": lead_obj.get("company", "Default Account"),
+        "sector": "technolgy",
+        "sales_price": lead_obj.get("value", 50000.0),
+    })
+
+    # Update lead score in repository
+    edit_lead(lead_id, {
+        "lead_score": prediction["lead_score"],
+        "purchase_probability": prediction["purchase_probability"],
+    })
+
+    return {
+        "lead_id": lead_id,
+        "lead_score": prediction["lead_score"],
+        "purchase_probability": prediction["purchase_probability"],
+        "prediction": prediction["prediction"],
+    }, 200
+

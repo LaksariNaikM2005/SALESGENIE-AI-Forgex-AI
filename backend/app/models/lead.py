@@ -95,8 +95,32 @@ class Lead(db.Model):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey("companies.id"),
+        nullable=True,
+        index=True,
+    )
+
+    contact_id = db.Column(
+        db.Integer,
+        db.ForeignKey("contacts.id"),
+        nullable=True,
+        index=True,
+    )
+
     assigned_user = db.relationship(
         "User",
+        back_populates="leads",
+    )
+
+    company_rel = db.relationship(
+        "Company",
+        back_populates="leads",
+    )
+
+    contact_rel = db.relationship(
+        "Contact",
         back_populates="leads",
     )
 
@@ -117,3 +141,15 @@ class Lead(db.Model):
         back_populates="lead",
         cascade="all, delete-orphan",
     )
+
+    opportunities = db.relationship(
+        "Opportunity",
+        back_populates="lead",
+        cascade="all, delete-orphan",
+    )
+
+    conversations = db.relationship(
+        "Conversation",
+        back_populates="lead",
+        cascade="all, delete-orphan",
+    )
