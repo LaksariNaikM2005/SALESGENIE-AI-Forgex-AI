@@ -4,9 +4,29 @@
 
 ---
 
-## 📸 Application Demo & Overview
+## 📸 Application Screenshots & Interface Showcase
 
-![SalesGenie AI Intelligence Dashboard](docs/demo_dashboard.png)
+### 🔐 1. User Authentication & Login Page
+*Secure JWT authentication interface with Role-Based Access Control (RBAC) entry.*
+![SalesGenie AI Login Interface](docs/login.png)
+
+---
+
+### 📊 2. Sales Performance Dashboard & Analytics
+*Real-time pipeline analytics, manufacturing sub-industry breakdown chart, deal stage funnel, and top ML qualified prospects.*
+![Sales Performance Dashboard & Analytics](docs/dashboard_analytics.png)
+
+---
+
+### 💡 3. AI Next-Best-Action Recommendations
+*ML-driven recommendation cards prioritized by High, Medium, and Low action impact with one-click resolution.*
+![AI Recommendations Interface](docs/ai_recommendations.png)
+
+---
+
+### 🔬 4. AI Lead Insights & Manufacturing Tech Stack Intelligence
+*In-depth prospect profile featuring predicted lead scores, win probabilities, AI sales advice, and hardware/software tech stack badges (ROS2, Siemens PLC, Fanuc CNC, SCADA).*
+![AI Lead Insights & Tech Stack Intelligence](docs/ai_lead_insights.png)
 
 ---
 
