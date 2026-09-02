@@ -40,73 +40,152 @@ def auto_seed_leads_if_empty():
     """
     Guarantees that real-world manufacturing dataset leads and connected AI recommendations
     are populated dynamically if database leads table is empty.
+    Loads all records from the real-world sales_pipeline.csv dataset.
     """
+    from werkzeug.security import generate_password_hash
+    from ..models import User
+
+    # Ensure demo users exist
+    if User.query.count() == 0:
+        demo_users = [
+            {"name": "Admin User",     "email": "admin@forgex.ai",   "password": "Admin@123",   "role": "admin"},
+            {"name": "Sarah Mitchell", "email": "manager@forgex.ai", "password": "Manager@123", "role": "sales_manager"},
+            {"name": "James Carter",   "email": "sales@forgex.ai",   "password": "Sales@123",   "role": "sales_rep"},
+            {"name": "Priya Sharma",   "email": "priya@forgex.ai",   "password": "Priya@123",   "role": "sales_rep"},
+            {"name": "Marcus Vance",   "email": "marcus@forgex.ai",  "password": "Marcus@123",  "role": "sales_rep"},
+        ]
+        for ud in demo_users:
+            if not User.query.filter_by(email=ud["email"]).first():
+                db.session.add(User(
+                    name=ud["name"],
+                    email=ud["email"],
+                    password_hash=generate_password_hash(ud["password"]),
+                    role=ud["role"],
+                    is_active=True,
+                ))
+        db.session.commit()
+
     if Lead.query.count() > 0:
         return
 
     project_root = Path(__file__).resolve().parent.parent.parent.parent
     raw_path = project_root / "ai_ml_engine" / "data" / "raw" / "sales_pipeline.csv"
 
-    if raw_path.exists():
-        df = pd.read_csv(raw_path)
-        sample_df = df.head(60)
-        for idx, row in sample_df.iterrows():
-            company_name = str(row["account"]).strip()
-            contact_name = f"Agent {row['sales_agent']}"
-            email = f"contact.{idx}@{(company_name.lower().replace(' ', ''))}.example.com"
-            val = float(row["deal_value"]) if pd.notna(row["deal_value"]) else 125000.0
-            sector_val = str(row["sector"]).strip().replace("_", " ").title()
+    if not raw_path.exists():
+        logger.warning(f"Dataset not found at {raw_path}. Cannot auto-seed leads.")
+        return
 
-            if "Semi" in sector_val:
-                t_stack = "EUV Lithography, MES, Cleanroom SCADA"
-            elif "Auto" in sector_val:
-                t_stack = "Automotive Stamping, ROS2, Vision Inspection"
-            elif "Tooling" in sector_val or "Cnc" in sector_val:
-                t_stack = "Fanuc CNC, High-Speed Spindles, CAD/CAM"
-            elif "Heavy" in sector_val:
-                t_stack = "Siemens S7 PLC, Heavy Hydraulics, SCADA"
-            else:
-                t_stack = "ROS2, Siemens S7 PLC, Fanuc CNC, IoT Edge"
+    TECH_STACK_MAP = {
+        "semi": "EUV Lithography, MES, Cleanroom SCADA, APC",
+        "auto": "Automotive Stamping, ROS2, Vision Inspection, MES",
+        "tool": "Fanuc CNC, High-Speed Spindles, CAD/CAM",
+        "cnc":  "Fanuc CNC, High-Speed Spindles, CAD/CAM",
+        "heavy": "Siemens S7 PLC, Heavy Hydraulics, SCADA",
+        "elec": "PCB Assembly Line, AOI Systems, SMT Equipment",
+        "robot": "KUKA Robots, ROS2, Force/Torque Sensors",
+        "food": "HACCP Systems, Conveyor Automation, ERP",
+        "pharm": "FDA-Compliant MES, Clean Room HVAC, Serialization",
+    }
+
+    def get_tech_stack(sector):
+        s = str(sector).lower()
+        for key, stack in TECH_STACK_MAP.items():
+            if key in s:
+                return stack
+        return "ROS2, Siemens S7 PLC, Fanuc CNC, IoT Edge"
+
+    def map_stage(deal_stage):
+        s = str(deal_stage).strip().lower()
+        if s == "won":           return "Won"
+        if s == "lost":          return "Lost"
+        if s == "proposal":      return "Proposal"
+        if s == "negotiation":   return "Negotiation"
+        if s == "qualified":     return "Qualified"
+        return "New Lead"
+
+    try:
+        df = pd.read_csv(raw_path)
+    except Exception as e:
+        logger.error(f"Failed to read dataset CSV: {e}")
+        return
+
+    created = 0
+    errors = 0
+    batch_size = 200
+
+    for idx, row in df.iterrows():
+        try:
+            company    = str(row.get("account", f"Company_{idx}")).strip()
+            agent      = str(row.get("sales_agent", "Marcus Vance")).strip()
+            sector     = str(row.get("sector", "industrial_automation")).strip()
+            product    = str(row.get("product", "Industrial Robot")).strip()
+            deal_stage = str(row.get("deal_stage", "Qualified")).strip()
+            revenue    = safe_float(row.get("revenue"), default=85.0)
+            employees  = safe_int(row.get("employees"), default=1450)
+            deal_val   = safe_float(row.get("deal_value"), default=125000.0)
+            sector_clean = sector.replace("_", " ").title()
+            email = f"contact.{idx}@{company.lower().replace(' ', '').replace('.', '')}.com"
 
             lead_payload = {
-                "account": company_name,
-                "company": company_name,
-                "contact_name": contact_name,
-                "email": email,
-                "value": val,
-                "sector": sector_val,
-                "product": str(row["product"]).strip(),
-                "sales_agent": str(row["sales_agent"]).strip(),
-                "revenue": float(row["revenue"]) if pd.notna(row["revenue"]) else 85.0,
-                "employees": int(row["employees"]) if pd.notna(row["employees"]) else 1450,
-                "stage": "Won" if str(row["deal_stage"]).strip().lower() == "won" else "Qualified",
+                "account": company,
+                "company": company,
+                "sector": sector,
+                "product": product,
+                "sales_agent": agent,
+                "manager": str(row.get("manager", "Alex Vance")).strip(),
+                "regional_office": str(row.get("regional_office", "Midwest")).strip(),
+                "revenue": revenue,
+                "employees": employees,
+                "value": deal_val,
+                "sales_price": safe_float(row.get("sales_price"), default=deal_val),
+                "year_established": safe_int(row.get("year_established"), default=1998),
+                "office_location": str(row.get("office_location", "United States")).strip(),
+                "series": str(row.get("series", "Industrial Automation")).strip(),
             }
 
             ml_input = build_ml_input(lead_payload)
             prediction = predict_lead(ml_input)
+            stage = map_stage(deal_stage)
 
             lead = Lead(
-                company=company_name,
-                contact_name=contact_name,
+                company=company,
+                contact_name=f"Contact at {company}",
                 email=email,
-                value=val,
-                sector=sector_val,
-                product=lead_payload["product"],
-                tech_stack=t_stack,
-                revenue=lead_payload["revenue"],
-                employees=lead_payload["employees"],
-                sales_agent=lead_payload["sales_agent"],
-                stage=lead_payload["stage"],
-                status="Open",
+                value=deal_val,
+                sector=sector_clean,
+                product=product,
+                tech_stack=get_tech_stack(sector),
+                revenue=revenue,
+                employees=employees,
+                sales_agent=agent,
+                stage=stage,
+                status="Open" if stage not in ["Won", "Lost"] else "Closed",
                 lead_score=prediction["lead_score"],
                 purchase_probability=prediction["purchase_probability"],
             )
             db.session.add(lead)
-        db.session.commit()
+            created += 1
 
-        # Connect AI Recommendations to every seeded lead
+            if created % batch_size == 0:
+                db.session.commit()
+                logger.info(f"Auto-seed: committed {created} leads so far...")
+
+        except Exception as exc:
+            errors += 1
+            if errors <= 5:
+                logger.error(f"Auto-seed row {idx} error: {exc}")
+
+    db.session.commit()
+    logger.info(f"Auto-seed complete: {created} leads created ({errors} errors)")
+
+    # Connect AI Recommendations to every seeded lead
+    try:
         from .ai_service import generate_all_recommendations
         generate_all_recommendations()
+        logger.info("Auto-seed: AI recommendations generated for all leads")
+    except Exception as e:
+        logger.error(f"Auto-seed: failed to generate AI recommendations: {e}")
+
 
 
 def serialize_lead(lead):

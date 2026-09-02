@@ -102,7 +102,7 @@ def generate_manufacturing_dataset(num_records=5000):
     df = pd.DataFrame(records)
     out_path = os.path.join(RAW_DIR, "manufacturing_sector_dataset.csv")
     df.to_csv(out_path, index=False)
-    print(f"Pure Manufacturing dataset saved to: {out_path} ({len(df)} records)")
+    print(f"Manufacturing dataset saved to: {out_path} ({len(df)} records)")
     
     # Write sales_pipeline.csv with pure manufacturing records
     pipe_path = os.path.join(RAW_DIR, "sales_pipeline.csv")

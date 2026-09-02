@@ -27,15 +27,20 @@ jobs:
           pip install pytest pytest-cov
 
       - name: Validate ML Data Loader
+        env:
+          PYTHONPATH: .
         run: |
           python -m ai_ml_engine.preprocessing.data_loader
 
       - name: Validate ML Preprocessing Pipeline
+        env:
+          PYTHONPATH: .
         run: |
           python -m ai_ml_engine.preprocessing.preprocessor
 
       - name: Run Test Suite
         env:
+          PYTHONPATH: .
           FLASK_ENV: testing
           JWT_SECRET_KEY: test-secret-key-ci
         run: |
@@ -58,5 +63,5 @@ jobs:
       - name: Install Frontend Dependencies & Build
         run: |
           cd frontend
-          npm ci
+          npm install
           npm run build

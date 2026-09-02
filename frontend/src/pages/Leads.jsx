@@ -56,15 +56,9 @@ const Leads = () => {
           totalCount = res.data.length;
         }
 
-        if (fetchedList.length === 0 && !search && sectorFilter === 'all' && stageFilter === 'all' && page === 1) {
-          api.post('/leads/sync-real-dataset')
-            .then(() => fetchLeads())
-            .catch(() => setLeads([]));
-        } else {
-          setLeads(fetchedList);
-          setTotalLeads(totalCount);
-          setTotalPages(pagesCount);
-        }
+        setLeads(fetchedList);
+        setTotalLeads(totalCount);
+        setTotalPages(pagesCount);
       })
       .catch(err => {
         console.error('Failed to fetch leads:', err);
@@ -181,10 +175,14 @@ const Leads = () => {
               >
                 <option value="all">All Sectors</option>
                 <option value="Industrial Automation">Industrial Automation</option>
-                <option value="Semiconductor">Semiconductors</option>
-                <option value="Automotive">Automotive Parts</option>
-                <option value="Precision">Precision Tooling</option>
+                <option value="Automotive">Automotive Manufacturing</option>
+                <option value="Chemical">Chemical Manufacturing</option>
                 <option value="Heavy Equipment">Heavy Equipment</option>
+                <option value="Metals">Metals Manufacturing</option>
+                <option value="Machinery">Machinery</option>
+                <option value="Aerospace">Aerospace Manufacturing</option>
+                <option value="Tooling">Tooling Manufacturing</option>
+                <option value="Semiconductor">Semiconductor Manufacturing</option>
               </select>
             </div>
           </div>
@@ -247,8 +245,8 @@ const Leads = () => {
                     <td>
                       <div className="d-flex flex-wrap gap-1" style={{ maxWidth: '240px' }}>
                         {(lead.tech_stack || "Siemens PLC, ROS2").split(',').map((tech, i) => (
-                          <span key={i} className="badge bg-secondary-subtle text-light border border-secondary px-2 py-0" style={{ fontSize: '0.7rem' }}>
-                            <Cpu size={10} className="me-1 text-warning" />{tech.trim()}
+                          <span key={i} className="badge border border-info-subtle px-2 py-1 d-inline-flex align-items-center" style={{ fontSize: '0.72rem', backgroundColor: '#0f172a', color: '#38bdf8' }}>
+                            <Cpu size={11} className="me-1 text-warning flex-shrink-0" />{tech.trim()}
                           </span>
                         ))}
                       </div>
@@ -386,7 +384,7 @@ const Leads = () => {
                       />
                     </div>
                     <div className="col-md-12">
-                      <label className="form-label small fw-medium text-light">Manufacturing Technology Stack</label>
+                      <label className="form-label small fw-medium text-light">Technology Stack</label>
                       <input
                         type="text"
                         className="form-control bg-dark text-light border-secondary"

@@ -212,7 +212,7 @@ def seed():
                 print(f"Seeded {len(sample_df)} real manufacturing leads with ML scores.")
 
         # 5. Generate AI Recommendations for All Leads
-        print("Generating AI Next-Best-Action recommendations for all leads...")
+        print("Generating AI recommendations for all leads...")
         recs = generate_all_recommendations()
         print(f"Generated {len(recs)} active AI recommendations.")
 

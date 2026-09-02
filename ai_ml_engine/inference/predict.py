@@ -58,13 +58,39 @@ def predict_lead(lead_data: dict) -> dict:
         prediction_val = int(model.predict(df)[0])
         purchase_prob = 1.0 if prediction_val == 1 else 0.0
 
-    prediction_class = "Won" if purchase_prob >= 0.5 else "Lost"
-    lead_score = round(purchase_prob * 100, 2)
+    prediction_class = "Won" if purchase_prob >= 0.10 else "Lost"
+    # Calibrate model probability (0.0 - 0.20+) into 0 - 100 score scale
+    if purchase_prob <= 0.20:
+        lead_score = min(100.0, round((purchase_prob / 0.20) * 100.0, 2))
+    else:
+        lead_score = min(100.0, round(purchase_prob * 100.0, 2))
+
+    # Lead temperature range: Hot (>=82), Warm (>=45), Cold (<45)
+    if lead_score >= 82.0:
+        lead_temperature = "Hot Lead"
+    elif lead_score >= 45.0:
+        lead_temperature = "Warm Lead"
+    else:
+        lead_temperature = "Cold Lead"
+
+    # Stage mapping range: Won (>=75), Negotiation (>=70), Proposal (>=50), Qualified (>=25), New Lead (<=25)
+    if lead_score >= 75.0:
+        recommended_stage = "Won"
+    elif lead_score >= 70.0:
+        recommended_stage = "Negotiation"
+    elif lead_score >= 50.0:
+        recommended_stage = "Proposal"
+    elif lead_score >= 25.0:
+        recommended_stage = "Qualified"
+    else:
+        recommended_stage = "New Lead"
 
     return {
         "prediction": prediction_class,
         "purchase_probability": round(purchase_prob, 4),
         "lead_score": lead_score,
+        "lead_temperature": lead_temperature,
+        "recommended_stage": recommended_stage,
     }
 
 

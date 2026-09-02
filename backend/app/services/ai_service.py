@@ -32,37 +32,45 @@ def generate_ai_lead_insights(lead) -> dict:
     elif value >= 100000.0:
         drivers.append("Mid-tier capital expenditure deal aligned with manufacturing standards.")
 
-    if prob >= 0.70 or score >= 70.0:
-        drivers.append("Strong historical win rate signals across sales agent and product series.")
+    # Hot Lead (>=82), Warm Lead (>=45), Cold Lead (<45)
+    if score >= 82.0 or prob >= 0.82:
+        drivers.append("Hot Lead signal: Exceptionally high historical win rate & strong purchasing intent.")
         priority = "High"
         risk_level = "Low"
+        temperature = "Hot Lead"
         action = f"Schedule executive SLA agreement & plant tour with {lead.contact_name or 'decision maker'}."
         pricing_strategy = "Standard enterprise pricing (0-5% max discount incentive)."
-        reason = f"High ML conversion score ({score}/100) indicates strong purchasing intent."
-    elif prob >= 0.40 or score >= 40.0:
-        drivers.append("Moderate account engagement and historical sector stability.")
+        reason = f"Hot Lead Score ({score}/100 >= 82). High conversion probability ({round(prob * 100, 1)}%)."
+    elif score >= 45.0 or prob >= 0.45:
+        drivers.append("Warm Lead signal: Moderate account engagement and historical sector stability.")
         priority = "Medium"
         risk_level = "Medium"
+        temperature = "Warm Lead"
         action = f"Deliver technical engineering ROI demo & equipment specs to {company}."
         pricing_strategy = "Offer 5-8% volume incentive discount if closed within current quarter."
-        reason = f"Moderate conversion probability ({round(prob * 100, 1)}%). Technical briefing required."
+        reason = f"Warm Lead Score ({score}/100 between 45-81). Moderate conversion probability ({round(prob * 100, 1)}%)."
     else:
-        drivers.append("Long sales cycle or lower historical conversion rate in this vertical.")
+        drivers.append("Cold Lead signal: Longer sales cycle or lower historical conversion rate.")
         priority = "Low"
         risk_level = "High"
+        temperature = "Cold Lead"
         action = f"Send automated technical case study & schedule quarterly follow-up call."
         pricing_strategy = "Require standard deposit terms with pilot evaluation option."
-        reason = f"Lower ML qualification score ({score}/100). Nurture prospect with technical whitepapers."
+        reason = f"Cold Lead Score ({score}/100 <= 45). Nurture prospect with technical whitepapers."
 
-    if "qualified" in stage:
-        action = f"Present formal proposal and technical SCADA/PLC integration roadmap to {company}."
-        priority = "High"
-    elif "proposal" in stage:
-        action = f"Follow up on executive proposal approval with {lead.contact_name or 'Head of Operations'}."
+    # Stage alignment overrides for action plan based on current stage
+    if "won" in stage:
+        action = f"Initiate post-sale onboarding & SCADA deployment plan for {company}."
         priority = "High"
     elif "negotiation" in stage:
         action = f"Finalize contract terms and warranty service agreement for {company}."
         priority = "High"
+    elif "proposal" in stage:
+        action = f"Follow up on executive proposal approval with {lead.contact_name or 'Head of Operations'}."
+        priority = "High"
+    elif "qualified" in stage:
+        action = f"Present formal proposal and technical SCADA/PLC integration roadmap to {company}."
+        priority = "Medium" if priority != "High" else "High"
 
     return {
         "lead_id": lead.id,
@@ -103,17 +111,25 @@ def create_recommendation(lead_id: int) -> AIRecommendation:
     return rec
 
 
-def generate_all_recommendations() -> list[AIRecommendation]:
+def generate_all_recommendations() -> list:
     """
     Scans all leads and generates/refreshes AI recommendations for every prospect.
+    Commits in batches to prevent large transaction locks.
     """
     leads = Lead.query.all()
     created = []
-    for lead in leads:
+    for i, lead in enumerate(leads):
         rec = create_recommendation(lead.id)
         if rec:
             created.append(rec)
+        # Batch commit every 50 to reduce memory usage
+        if (i + 1) % 50 == 0:
+            try:
+                db.session.commit()
+            except Exception:
+                db.session.rollback()
     return created
+
 
 
 def get_recommendations(lead_id: int):

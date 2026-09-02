@@ -42,7 +42,10 @@ def create_app(config_class=Config):
     )
 
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception:
+            pass
 
     # Import route blueprints
     from .routes.auth import auth_bp

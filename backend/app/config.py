@@ -19,6 +19,9 @@ class Config:
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "connect_args": {"timeout": 30.0}
+    }
 
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 

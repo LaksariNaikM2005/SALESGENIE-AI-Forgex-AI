@@ -46,7 +46,7 @@ def create():
 @leads_bp.get("")
 @jwt_required()
 def get_all():
-    # Guarantee real manufacturing dataset leads are auto-seeded if database empty
+    # Guarantee manufacturing dataset leads are auto-seeded if database empty
     auto_seed_leads_if_empty()
 
     search = request.args.get("search", "").strip().lower()

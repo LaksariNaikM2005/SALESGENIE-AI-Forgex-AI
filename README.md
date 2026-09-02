@@ -18,7 +18,7 @@
 
 ---
 
-### 💡 3. AI Next-Best-Action Recommendations
+### 💡 3. AI Recommendations
 *ML-driven recommendation cards prioritized by High, Medium, and Low action impact with one-click resolution.*
 ![AI Recommendations Interface](docs/ai_recommendations.png)
 
@@ -125,7 +125,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Initialize database schema and seed real manufacturing dataset & demo accounts
+# Initialize database schema and seed  manufacturing dataset & demo accounts
 python scripts/init_db.py
 python scripts/seed_demo.py
 

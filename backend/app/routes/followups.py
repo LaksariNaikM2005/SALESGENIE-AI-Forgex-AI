@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import logging
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
@@ -6,7 +7,9 @@ from flask_jwt_extended import jwt_required
 from ..extensions import db
 from ..models.lead import Lead
 from ..models.follow_up_history import FollowUpHistory
+from ..models.ai_recommendation import AIRecommendation
 
+logger = logging.getLogger(__name__)
 
 followups_bp = Blueprint("followups", __name__)
 
@@ -31,9 +34,39 @@ def parse_datetime(value):
         return None
 
 
-def serialize_followup(followup):
-    """Convert FollowUpHistory model to API JSON."""
-    return {
+def get_next_best_action(lead: Lead) -> dict:
+    """
+    Derives AI Next-Best-Action for a follow-up task.
+    Returns a dict with action, priority, reason, risk_level, pricing_strategy.
+    """
+    try:
+        from ..services.ai_service import generate_ai_lead_insights
+        insights = generate_ai_lead_insights(lead)
+        return {
+            "next_best_action": insights.get("recommendation", ""),
+            "priority": insights.get("priority", "Medium"),
+            "reason": insights.get("reason", ""),
+            "risk_level": insights.get("risk_level", "Medium"),
+            "pricing_strategy": insights.get("pricing_strategy", ""),
+            "lead_score": insights.get("lead_score", 0),
+            "purchase_probability": insights.get("purchase_probability", 0),
+        }
+    except Exception as e:
+        logger.warning(f"Could not generate AI next-best-action for lead {lead.id}: {e}")
+        return {
+            "next_best_action": "Schedule a follow-up call to understand buyer needs.",
+            "priority": "Medium",
+            "reason": "AI insights unavailable - standard follow-up recommended.",
+            "risk_level": "Medium",
+            "pricing_strategy": "Standard pricing",
+            "lead_score": None,
+            "purchase_probability": None,
+        }
+
+
+def serialize_followup(followup, include_ai=True):
+    """Convert FollowUpHistory model to API JSON with optional AI insights."""
+    base = {
         "id": followup.id,
         "lead_id": followup.lead_id,
         "recommendation_id": followup.recommendation_id,
@@ -61,6 +94,32 @@ def serialize_followup(followup):
             else None
         ),
     }
+
+    # Attach lead context
+    if followup.lead:
+        lead = followup.lead
+        base["lead_company"] = lead.company
+        base["lead_contact"] = lead.contact_name
+        base["lead_stage"] = lead.stage
+        base["lead_sector"] = lead.sector
+        base["lead_value"] = lead.value
+        base["lead_score"] = lead.lead_score
+        base["purchase_probability"] = lead.purchase_probability
+
+        if include_ai:
+            ai_data = get_next_best_action(lead)
+            base["ai"] = ai_data
+    else:
+        base["lead_company"] = None
+        base["lead_contact"] = None
+        base["lead_stage"] = None
+        base["lead_sector"] = None
+        base["lead_value"] = None
+        base["lead_score"] = None
+        base["purchase_probability"] = None
+        base["ai"] = None
+
+    return base
 
 
 

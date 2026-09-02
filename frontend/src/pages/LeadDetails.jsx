@@ -115,7 +115,7 @@ const LeadDetails = () => {
           {/* Requirement 6: Manufacturing Technology Stack Card */}
           <div className="card border-secondary p-4 mb-4" style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}>
             <h5 className="fw-bold border-bottom border-secondary pb-2 mb-3 d-flex align-items-center text-white">
-              <Cpu className="me-2 text-warning" size={20} /> Manufacturing Technology Stack
+              <Cpu className="me-2 text-warning" size={20} /> Technology Stack
             </h5>
             <p className="small text-muted mb-3">Enterprise hardware, automation protocols, and industrial software deployed by {lead.company}:</p>
             <div className="d-flex flex-wrap gap-2">
@@ -132,7 +132,7 @@ const LeadDetails = () => {
         <div className="col-md-7">
           <div className="card border-secondary p-4 mb-4" style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}>
             <h5 className="fw-bold border-bottom border-secondary pb-2 mb-3 d-flex align-items-center text-white">
-              <Award className="me-2 text-warning" size={22} /> Real ML Qualification & AI Insights
+              <Award className="me-2 text-warning" size={22} /> ML Qualification & AI Insights
             </h5>
             <div className="row text-center mb-4">
               <div className="col-6 border-end border-secondary">

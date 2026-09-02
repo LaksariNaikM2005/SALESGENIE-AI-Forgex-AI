@@ -23,7 +23,7 @@ class FollowUpHistory(db.Model):
     )
 
     action = db.Column(
-        db.String(100),
+        db.Text,
         nullable=False,
     )
 

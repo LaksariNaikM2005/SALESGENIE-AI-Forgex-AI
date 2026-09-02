@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import { Sparkles, Award, ArrowUpRight, CheckCircle, Lightbulb, Filter, RefreshCw, Zap, Search, ChevronRight, Cpu } from 'lucide-react';
+import { Sparkles, Award, CheckCircle, Lightbulb, Filter, RefreshCw, Zap, Search, ChevronRight, DollarSign, TrendingUp, Brain } from 'lucide-react';
 
 const Recommendations = () => {
   const [recommendations, setRecommendations] = useState([]);
@@ -60,7 +60,7 @@ const Recommendations = () => {
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
           <h2 className="fw-bold text-light mb-1 d-flex align-items-center gap-2">
-            <Sparkles className="text-warning" size={28} /> AI Next-Best-Action Recommendations
+            <Sparkles className="text-warning" size={28} /> AI Recommendations
           </h2>
           <p className="text-muted mb-0">Real-time intelligent recommendations linked directly to manufacturing prospects & ML scores</p>
         </div>
@@ -121,38 +121,74 @@ const Recommendations = () => {
         ) : (
           filteredRecommendations.map((item) => (
             <div key={item.id} className="col-md-6">
-              <div className={`card border-secondary h-100 p-4 ${item.completed ? 'opacity-75' : ''}`} style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}>
-                <div className="d-flex align-items-center justify-content-between mb-3">
+              <div className={`card border-secondary h-100 ${item.completed ? 'opacity-75' : ''}`} style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}>
+                {/* Card Header */}
+                <div className="card-header border-secondary d-flex align-items-center justify-content-between"
+                     style={{ backgroundColor: '#0f172a' }}>
                   <div className="d-flex align-items-center gap-2">
-                    <span className={`badge ${item.priority === 'High' ? 'bg-danger' : item.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info'} px-2 py-1`}>
+                    <span className={`badge ${item.priority === 'High' ? 'bg-danger' : item.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info text-dark'} px-2 py-1`}>
                       {item.priority} Priority
                     </span>
                     {item.sector && (
-                      <span className="badge bg-dark border border-secondary text-info px-2 py-1">
+                      <span className="badge bg-dark border border-secondary text-info px-2 py-1 small">
                         {item.sector}
                       </span>
                     )}
                   </div>
-                  {item.lead_score && (
-                    <span className="badge bg-success-subtle text-success border border-success px-2 py-1">
-                      {item.lead_score} ML Score
-                    </span>
+                  <div className="d-flex align-items-center gap-1">
+                    {item.lead_score != null && (
+                      <span className={`badge small ${item.lead_score >= 70 ? 'bg-success' : item.lead_score >= 40 ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                        {item.lead_score} ML
+                      </span>
+                    )}
+                    {item.purchase_probability != null && (
+                      <span className="badge bg-primary small">
+                        {(item.purchase_probability * 100).toFixed(0)}% Conv
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="card-body p-3">
+                  {/* Company & Stage */}
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <span className="fw-bold text-white">{item.lead_company}</span>
+                    {item.stage && <span className="badge bg-secondary small">{item.stage}</span>}
+                  </div>
+
+                  {/* AI Recommendation */}
+                  <div className="p-2 rounded border border-secondary mb-3" style={{ backgroundColor: '#0f172a' }}>
+                    <h6 className="fw-bold text-warning mb-1 small d-flex align-items-center gap-1">
+                      <Brain size={14} /> AI Next-Best-Action:
+                    </h6>
+                    <p className="small text-light mb-0">{item.recommendation}</p>
+                  </div>
+
+                  {/* Rationale */}
+                  <p className="small mb-2" style={{ color: '#94a3b8' }}>
+                    <strong style={{ color: '#cbd5e1' }}>Rationale:</strong> {item.reason}
+                  </p>
+
+                  {/* Contact */}
+                  {item.lead_contact && (
+                    <p className="small mb-0 text-muted">
+                      <TrendingUp size={12} className="me-1" />
+                      Contact: <span className="text-light">{item.lead_contact}</span>
+                    </p>
                   )}
                 </div>
 
-                <h5 className="fw-bold text-white mb-2">{item.recommendation}</h5>
-                <p className="small text-muted mb-3" style={{ color: '#cbd5e1' }}><strong>Rationale:</strong> {item.reason}</p>
-
-                {/* Connected Prospect Link Section */}
-                <div className="mt-auto pt-3 border-top border-secondary d-flex align-items-center justify-content-between">
+                {/* Footer */}
+                <div className="card-footer border-secondary d-flex align-items-center justify-content-between"
+                     style={{ backgroundColor: '#0f172a' }}>
                   <Link to={`/leads/${item.lead_id}`} className="btn btn-sm btn-outline-info d-flex align-items-center gap-1">
-                    Connected Prospect: <strong>{item.lead_company}</strong> <ChevronRight size={14} />
+                    View Prospect <ChevronRight size={14} />
                   </Link>
                   <button
                     onClick={() => handleToggleComplete(item.id, item.completed)}
                     className={`btn btn-sm ${item.completed ? 'btn-success' : 'btn-outline-primary'} d-flex align-items-center gap-1`}
                   >
-                    <CheckCircle size={16} /> {item.completed ? 'Completed' : 'Mark Completed'}
+                    <CheckCircle size={14} /> {item.completed ? 'Done' : 'Mark Done'}
                   </button>
                 </div>
               </div>

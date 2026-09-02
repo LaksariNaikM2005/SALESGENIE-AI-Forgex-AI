@@ -181,10 +181,14 @@ const Dashboard = () => {
             >
               <option value="all">All Manufacturing Sectors</option>
               <option value="Industrial Automation">Industrial Automation</option>
-              <option value="Semiconductor">Semiconductor Fabs</option>
-              <option value="Automotive">Automotive Parts</option>
-              <option value="Precision">Precision CNC Tooling</option>
+              <option value="Automotive">Automotive Manufacturing</option>
+              <option value="Chemical">Chemical Manufacturing</option>
               <option value="Heavy Equipment">Heavy Equipment</option>
+              <option value="Metals">Metals Manufacturing</option>
+              <option value="Machinery">Machinery</option>
+              <option value="Aerospace">Aerospace Manufacturing</option>
+              <option value="Tooling">Tooling Manufacturing</option>
+              <option value="Semiconductor">Semiconductor Manufacturing</option>
             </select>
           </div>
           <div className="col-md-6 d-flex align-items-center justify-content-md-end gap-2">
@@ -319,7 +323,7 @@ const Dashboard = () => {
         <div className="col-md-4">
           <div className="card border-secondary p-4 h-100" style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}>
             <h5 className="fw-bold mb-3 d-flex align-items-center text-white">
-              <PieChart className="me-2 text-warning" size={20} /> Manufacturing Sub-Industries (Dataset)
+              <PieChart className="me-2 text-warning" size={20} /> Manufacturing Industry
             </h5>
             <div style={{ height: '230px' }}>
               <Doughnut
