@@ -1,7 +1,10 @@
 from datetime import datetime
 import logging
+from pathlib import Path
+import pandas as pd
 
 from ..extensions import db
+from ..models import Lead
 from ai_ml_engine.inference.predict import predict_lead
 
 from ..repositories.lead_repository import (
@@ -33,14 +36,85 @@ def safe_int(val, default=0) -> int:
         return int(default)
 
 
+def auto_seed_leads_if_empty():
+    """
+    Guarantees that real-world manufacturing dataset leads and connected AI recommendations
+    are populated dynamically if database leads table is empty.
+    """
+    if Lead.query.count() > 0:
+        return
+
+    project_root = Path(__file__).resolve().parent.parent.parent.parent
+    raw_path = project_root / "ai_ml_engine" / "data" / "raw" / "sales_pipeline.csv"
+
+    if raw_path.exists():
+        df = pd.read_csv(raw_path)
+        sample_df = df.head(60)
+        for idx, row in sample_df.iterrows():
+            company_name = str(row["account"]).strip()
+            contact_name = f"Agent {row['sales_agent']}"
+            email = f"contact.{idx}@{(company_name.lower().replace(' ', ''))}.example.com"
+            val = float(row["deal_value"]) if pd.notna(row["deal_value"]) else 125000.0
+            sector_val = str(row["sector"]).strip().replace("_", " ").title()
+
+            if "Semi" in sector_val:
+                t_stack = "EUV Lithography, MES, Cleanroom SCADA"
+            elif "Auto" in sector_val:
+                t_stack = "Automotive Stamping, ROS2, Vision Inspection"
+            elif "Tooling" in sector_val or "Cnc" in sector_val:
+                t_stack = "Fanuc CNC, High-Speed Spindles, CAD/CAM"
+            elif "Heavy" in sector_val:
+                t_stack = "Siemens S7 PLC, Heavy Hydraulics, SCADA"
+            else:
+                t_stack = "ROS2, Siemens S7 PLC, Fanuc CNC, IoT Edge"
+
+            lead_payload = {
+                "account": company_name,
+                "company": company_name,
+                "contact_name": contact_name,
+                "email": email,
+                "value": val,
+                "sector": sector_val,
+                "product": str(row["product"]).strip(),
+                "sales_agent": str(row["sales_agent"]).strip(),
+                "revenue": float(row["revenue"]) if pd.notna(row["revenue"]) else 85.0,
+                "employees": int(row["employees"]) if pd.notna(row["employees"]) else 1450,
+                "stage": "Won" if str(row["deal_stage"]).strip().lower() == "won" else "Qualified",
+            }
+
+            ml_input = build_ml_input(lead_payload)
+            prediction = predict_lead(ml_input)
+
+            lead = Lead(
+                company=company_name,
+                contact_name=contact_name,
+                email=email,
+                value=val,
+                sector=sector_val,
+                product=lead_payload["product"],
+                tech_stack=t_stack,
+                revenue=lead_payload["revenue"],
+                employees=lead_payload["employees"],
+                sales_agent=lead_payload["sales_agent"],
+                stage=lead_payload["stage"],
+                status="Open",
+                lead_score=prediction["lead_score"],
+                purchase_probability=prediction["purchase_probability"],
+            )
+            db.session.add(lead)
+        db.session.commit()
+
+        # Connect AI Recommendations to every seeded lead
+        from .ai_service import generate_all_recommendations
+        generate_all_recommendations()
+
+
 def serialize_lead(lead):
-    # Retrieve tech stack from lead model or company_rel if available
     tech_stack = getattr(lead, "tech_stack", None)
     if not tech_stack and getattr(lead, "company_rel", None):
         tech_stack = lead.company_rel.technology_stack
 
     if not tech_stack:
-        # Default manufacturing tech stack fallback based on sector
         sector_str = str(getattr(lead, "sector", "")).lower()
         if "semi" in sector_str:
             tech_stack = "EUV Lithography, MES, Cleanroom Automation"
@@ -92,10 +166,12 @@ def serialize_lead(lead):
 
 
 def list_leads():
+    auto_seed_leads_if_empty()
     return [serialize_lead(lead) for lead in get_all_leads()]
 
 
 def find_lead(lead_id):
+    auto_seed_leads_if_empty()
     lead = get_lead_by_id(lead_id)
     if not lead:
         return None
@@ -103,10 +179,6 @@ def find_lead(lead_id):
 
 
 def build_ml_input(data: dict) -> dict:
-    """
-    Convert API/CRM lead payload into complete feature structure
-    expected by the real-data trained ML model.
-    """
     now = datetime.now()
 
     value = safe_float(data.get("value"), default=125000.0)
@@ -151,13 +223,8 @@ def build_ml_input(data: dict) -> dict:
 
 
 def add_lead(data: dict):
-    """
-    Create a lead, run real ML prediction, save prediction,
-    and commit complete lead transaction.
-    """
     lead = create_lead(data)
 
-    # Save additional manufacturing fields if present
     if "sector" in data:
         lead.sector = data["sector"]
     if "product" in data:
@@ -179,6 +246,10 @@ def add_lead(data: dict):
         lead.purchase_probability = prediction["purchase_probability"]
 
         db.session.commit()
+
+        # Connect an AI recommendation for new lead
+        from .ai_service import create_recommendation
+        create_recommendation(lead.id)
 
     except Exception as exc:
         logger.error(f"Error executing ML inference for lead creation: {exc}")

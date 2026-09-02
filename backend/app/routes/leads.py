@@ -8,6 +8,7 @@ from ..extensions import db
 from ..models import Lead
 from ..services.lead_service import (
     add_lead,
+    auto_seed_leads_if_empty,
     build_ml_input,
     edit_lead,
     find_lead,
@@ -45,6 +46,9 @@ def create():
 @leads_bp.get("")
 @jwt_required()
 def get_all():
+    # Guarantee real manufacturing dataset leads are auto-seeded if database empty
+    auto_seed_leads_if_empty()
+
     search = request.args.get("search", "").strip().lower()
     sector_filter = request.args.get("sector", "").strip().lower()
     stage_filter = request.args.get("stage", "").strip().lower()
@@ -149,6 +153,9 @@ def sync_real_dataset():
 
     db.session.commit()
 
+    from ..services.ai_service import generate_all_recommendations
+    generate_all_recommendations()
+
     return jsonify({
         "message": f"Successfully synchronized {created_count} real-world dataset records into database.",
         "total_leads_in_db": Lead.query.count(),
@@ -183,9 +190,6 @@ def update(lead_id):
 @leads_bp.delete("/<int:lead_id>")
 @role_required("sales_manager")
 def delete(lead_id):
-    """
-    Deletes a lead record. Restricted to Sales Managers and System Administrators.
-    """
     deleted = remove_lead(lead_id)
     if not deleted:
         return {"error": "Lead not found"}, 404

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
-import { Sparkles, Award, ArrowUpRight, CheckCircle, Lightbulb, Filter, RefreshCw, Zap, Search } from 'lucide-react';
+import { Sparkles, Award, ArrowUpRight, CheckCircle, Lightbulb, Filter, RefreshCw, Zap, Search, ChevronRight, Cpu } from 'lucide-react';
 
 const Recommendations = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [priorityFilter, setPriorityFilter] = useState('all');
-  const [sectorFilter, setSectorFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -27,7 +27,7 @@ const Recommendations = () => {
     setGenerating(true);
     try {
       const res = await api.post('/recommendations/generate-all');
-      alert(res.data?.message || 'Generated AI recommendations for all leads!');
+      alert(res.data?.message || 'Generated AI recommendations for all prospects!');
       fetchRecommendations();
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to generate recommendations');
@@ -45,7 +45,6 @@ const Recommendations = () => {
     }
   };
 
-  // Requirement 4: Filter recommendations by search and sector
   const filteredRecommendations = recommendations.filter(item => {
     const matchesSearch = !search ||
       item.recommendation?.toLowerCase().includes(search.toLowerCase()) ||
@@ -53,12 +52,7 @@ const Recommendations = () => {
       item.lead_contact?.toLowerCase().includes(search.toLowerCase()) ||
       item.reason?.toLowerCase().includes(search.toLowerCase());
 
-    const matchesSector = sectorFilter === 'all' ||
-      item.recommendation?.toLowerCase().includes(sectorFilter.toLowerCase()) ||
-      item.reason?.toLowerCase().includes(sectorFilter.toLowerCase()) ||
-      item.lead_company?.toLowerCase().includes(sectorFilter.toLowerCase());
-
-    return matchesSearch && matchesSector;
+    return matchesSearch;
   });
 
   return (
@@ -68,7 +62,7 @@ const Recommendations = () => {
           <h2 className="fw-bold text-light mb-1 d-flex align-items-center gap-2">
             <Sparkles className="text-warning" size={28} /> AI Next-Best-Action Recommendations
           </h2>
-          <p className="text-muted mb-0">Real-time intelligent recommendations powered by prospect engagement & ML signals</p>
+          <p className="text-muted mb-0">Real-time intelligent recommendations linked directly to manufacturing prospects & ML scores</p>
         </div>
         <div className="d-flex align-items-center gap-2">
           <button className="btn btn-warning d-flex align-items-center gap-2 fw-semibold" onClick={handleGenerateAll} disabled={generating}>
@@ -80,7 +74,7 @@ const Recommendations = () => {
         </div>
       </div>
 
-      {/* Requirement 4: Filter Toolbar in Recommendations */}
+      {/* Filter Toolbar in Recommendations */}
       <div className="card border-secondary p-3 mb-4" style={{ backgroundColor: '#1e293b' }}>
         <div className="row g-3 align-items-center">
           <div className="col-md-5">
@@ -110,7 +104,7 @@ const Recommendations = () => {
             </div>
           </div>
           <div className="col-md-3 text-md-end text-muted small">
-            <span>Active Recommendations: <strong className="text-light">{filteredRecommendations.length}</strong></span>
+            <span>Connected Recommendations: <strong className="text-light">{filteredRecommendations.length}</strong></span>
           </div>
         </div>
       </div>
@@ -129,17 +123,31 @@ const Recommendations = () => {
             <div key={item.id} className="col-md-6">
               <div className={`card border-secondary h-100 p-4 ${item.completed ? 'opacity-75' : ''}`} style={{ backgroundColor: '#1e293b', color: '#f8fafc' }}>
                 <div className="d-flex align-items-center justify-content-between mb-3">
-                  <span className={`badge ${item.priority === 'High' ? 'bg-danger' : item.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info'} px-2 py-1`}>
-                    {item.priority} Priority
-                  </span>
-                  <small className="text-muted">{item.generated_at ? new Date(item.generated_at).toLocaleDateString() : 'Recent'}</small>
+                  <div className="d-flex align-items-center gap-2">
+                    <span className={`badge ${item.priority === 'High' ? 'bg-danger' : item.priority === 'Medium' ? 'bg-warning text-dark' : 'bg-info'} px-2 py-1`}>
+                      {item.priority} Priority
+                    </span>
+                    {item.sector && (
+                      <span className="badge bg-dark border border-secondary text-info px-2 py-1">
+                        {item.sector}
+                      </span>
+                    )}
+                  </div>
+                  {item.lead_score && (
+                    <span className="badge bg-success-subtle text-success border border-success px-2 py-1">
+                      {item.lead_score} ML Score
+                    </span>
+                  )}
                 </div>
 
                 <h5 className="fw-bold text-white mb-2">{item.recommendation}</h5>
                 <p className="small text-muted mb-3" style={{ color: '#cbd5e1' }}><strong>Rationale:</strong> {item.reason}</p>
 
+                {/* Connected Prospect Link Section */}
                 <div className="mt-auto pt-3 border-top border-secondary d-flex align-items-center justify-content-between">
-                  <span className="small text-primary fw-semibold">{item.lead_company} ({item.lead_contact})</span>
+                  <Link to={`/leads/${item.lead_id}`} className="btn btn-sm btn-outline-info d-flex align-items-center gap-1">
+                    Connected Prospect: <strong>{item.lead_company}</strong> <ChevronRight size={14} />
+                  </Link>
                   <button
                     onClick={() => handleToggleComplete(item.id, item.completed)}
                     className={`btn btn-sm ${item.completed ? 'btn-success' : 'btn-outline-primary'} d-flex align-items-center gap-1`}

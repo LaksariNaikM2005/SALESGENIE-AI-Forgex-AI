@@ -11,6 +11,7 @@ from ..services.ai_service import (
     get_recommendations,
     update_recommendation,
 )
+from ..services.lead_service import auto_seed_leads_if_empty
 
 recommendations_bp = Blueprint(
     "recommendations",
@@ -20,11 +21,16 @@ recommendations_bp = Blueprint(
 
 
 def serialize_recommendation(recommendation: AIRecommendation) -> dict:
+    lead = recommendation.lead
     return {
         "id": recommendation.id,
         "lead_id": recommendation.lead_id,
-        "lead_company": recommendation.lead.company if recommendation.lead else "General Prospect",
-        "lead_contact": recommendation.lead.contact_name if recommendation.lead else "Unknown",
+        "lead_company": lead.company if lead else "General Prospect",
+        "lead_contact": lead.contact_name if lead else "Decision Maker",
+        "sector": getattr(lead, "sector", None) if lead else "Industrial Automation",
+        "lead_score": getattr(lead, "lead_score", 85.0) if lead else 85.0,
+        "purchase_probability": getattr(lead, "purchase_probability", 0.75) if lead else 0.75,
+        "stage": getattr(lead, "stage", "Qualified") if lead else "Qualified",
         "recommendation": recommendation.recommendation,
         "priority": recommendation.priority,
         "reason": recommendation.reason,
@@ -40,6 +46,9 @@ def serialize_recommendation(recommendation: AIRecommendation) -> dict:
 @recommendations_bp.get("/recommendations")
 @jwt_required()
 def get_global_recommendations():
+    # Ensure leads and recommendations exist in database
+    auto_seed_leads_if_empty()
+
     priority = request.args.get("priority")
     query = AIRecommendation.query
 
@@ -48,7 +57,6 @@ def get_global_recommendations():
 
     recommendations = query.order_by(AIRecommendation.generated_at.desc()).all()
 
-    # Auto-generate recommendations if list is empty
     if not recommendations:
         generate_all_recommendations()
         query = AIRecommendation.query
@@ -64,6 +72,7 @@ def get_global_recommendations():
 @recommendations_bp.post("/recommendations/generate-all")
 @jwt_required()
 def generate_all_endpoint():
+    auto_seed_leads_if_empty()
     created = generate_all_recommendations()
     return jsonify({
         "message": f"Successfully generated AI recommendations for {len(created)} leads.",
