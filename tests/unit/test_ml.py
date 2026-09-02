@@ -1,5 +1,7 @@
 import pytest
+from pathlib import Path
 from ai_ml_engine.inference.predict import predict_lead
+from ai_ml_engine.inference import predict as predict_module
 
 def test_predict_lead_output_structure():
     sample_lead = {
@@ -39,3 +41,15 @@ def test_predict_lead_output_structure():
     assert result["prediction"] in ["Won", "Lost"]
     assert 0.0 <= result["purchase_probability"] <= 1.0
     assert 0.0 <= result["lead_score"] <= 100.0
+
+
+def test_predict_lead_fallback_without_model(monkeypatch):
+    monkeypatch.setattr(
+        predict_module, "MODEL_PATH", Path("/tmp/nonexistent_lead_scoring_model.joblib")
+    )
+
+    result = predict_module.predict_lead({"historical_global_win_rate": 0.3})
+
+    assert result["prediction"] == "Lost"
+    assert result["purchase_probability"] == 0.3
+    assert result["lead_score"] == 30.0

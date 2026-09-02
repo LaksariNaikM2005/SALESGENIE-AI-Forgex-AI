@@ -23,16 +23,25 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r backend/requirements.txt
+          pip install -r ai_ml_engine/requirements.txt
           pip install pytest pytest-cov
 
       - name: Validate ML Data Loader
         run: |
-          python -m ai_ml_engine.preprocessing.data_loader
+          if [ -d "ai_ml_engine/data/raw" ]; then
+            python -m ai_ml_engine.preprocessing.data_loader
+          else
+            echo "Skipping Data Loader validation: ai_ml_engine/data/raw not present in CI checkout."
+          fi
 
       - name: Validate ML Preprocessing Pipeline
         run: |
-          python -m ai_ml_engine.preprocessing.preprocessor
+          if [ -d "ai_ml_engine/data/raw" ]; then
+            python -m ai_ml_engine.preprocessing.preprocessor
+          else
+            echo "Skipping Preprocessing validation: ai_ml_engine/data/raw not present in CI checkout."
+          fi
 
       - name: Run Test Suite
         env:
