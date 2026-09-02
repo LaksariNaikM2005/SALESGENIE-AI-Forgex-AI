@@ -20,8 +20,8 @@ def create_app(config_class=Config):
     cors.init_app(
         app,
         resources={
-            r"/api/*": {
-                "origins": app.config["CORS_ORIGINS"]
+            r"/*": {
+                "origins": "*"
             }
         },
     )
@@ -41,8 +41,12 @@ def create_app(config_class=Config):
         CRMConnection,
     )
 
+    with app.app_context():
+        db.create_all()
+
     # Import route blueprints
     from .routes.auth import auth_bp
+    from .routes.users import users_bp
     from .routes.leads import leads_bp
     from .routes.activities import activities_bp
     from .routes.recommendations import recommendations_bp
@@ -57,6 +61,7 @@ def create_app(config_class=Config):
 
     # Register route blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(users_bp)
     app.register_blueprint(leads_bp)
     app.register_blueprint(activities_bp)
     app.register_blueprint(recommendations_bp)
@@ -68,6 +73,16 @@ def create_app(config_class=Config):
     app.register_blueprint(outreach_bp)
     app.register_blueprint(crm_bp)
     app.register_blueprint(analytics_bp)
+
+    # Root route
+    @app.get("/")
+    def index():
+        return {
+            "service": app.config["APP_NAME"],
+            "status": "ok",
+            "message": "SalesGenie AI Backend API Server Running",
+            "health_check": "/api/health",
+        }, 200
 
     # Health check
     @app.get("/api/health")

@@ -8,6 +8,8 @@ from backend.app.extensions import db
 def init_db():
     app = create_app()
     with app.app_context():
+        print("Dropping all existing database tables...")
+        db.drop_all()
         print("Creating all database tables...")
         db.create_all()
         print("Database tables initialized successfully!")

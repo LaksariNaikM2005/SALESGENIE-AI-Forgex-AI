@@ -50,6 +50,43 @@ class Lead(db.Model):
         default=0.0,
     )
 
+    sector = db.Column(
+        db.String(100),
+        nullable=True,
+        default="Industrial Automation",
+        index=True,
+    )
+
+    product = db.Column(
+        db.String(150),
+        nullable=True,
+        default="Robotic Assembly Cell X7",
+    )
+
+    tech_stack = db.Column(
+        db.String(255),
+        nullable=True,
+        default="ROS2, Siemens PLC, Fanuc CNC",
+    )
+
+    revenue = db.Column(
+        db.Float,
+        nullable=True,
+        default=85.0,
+    )
+
+    employees = db.Column(
+        db.Integer,
+        nullable=True,
+        default=1450,
+    )
+
+    sales_agent = db.Column(
+        db.String(120),
+        nullable=True,
+        default="Marcus Vance",
+    )
+
     lead_score = db.Column(
         db.Float,
         nullable=True,
@@ -152,4 +189,4 @@ class Lead(db.Model):
         "Conversation",
         back_populates="lead",
         cascade="all, delete-orphan",
-    )
+    )

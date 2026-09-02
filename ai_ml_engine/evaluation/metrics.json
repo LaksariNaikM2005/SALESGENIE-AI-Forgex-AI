@@ -1,0 +1,113 @@
+{
+  "candidates_comparison": [
+    {
+      "model_name": "LogisticRegression (Val)",
+      "accuracy": 0.536,
+      "precision": 0.5522,
+      "recall": 0.8592,
+      "f1": 0.6723,
+      "roc_auc": 0.5595,
+      "confusion_matrix": [
+        [
+          60,
+          386
+        ],
+        [
+          78,
+          476
+        ]
+      ]
+    },
+    {
+      "model_name": "DecisionTree (Val)",
+      "accuracy": 0.507,
+      "precision": 0.5435,
+      "recall": 0.6877,
+      "f1": 0.6072,
+      "roc_auc": 0.508,
+      "confusion_matrix": [
+        [
+          126,
+          320
+        ],
+        [
+          173,
+          381
+        ]
+      ]
+    },
+    {
+      "model_name": "HistGradientBoosting (Val)",
+      "accuracy": 0.526,
+      "precision": 0.5735,
+      "recall": 0.5632,
+      "f1": 0.5683,
+      "roc_auc": 0.5071,
+      "confusion_matrix": [
+        [
+          214,
+          232
+        ],
+        [
+          242,
+          312
+        ]
+      ]
+    },
+    {
+      "model_name": "RandomForest (Val)",
+      "accuracy": 0.496,
+      "precision": 0.5687,
+      "recall": 0.3736,
+      "f1": 0.451,
+      "roc_auc": 0.4984,
+      "confusion_matrix": [
+        [
+          289,
+          157
+        ],
+        [
+          347,
+          207
+        ]
+      ]
+    },
+    {
+      "model_name": "GradientBoosting (Val)",
+      "accuracy": 0.453,
+      "precision": 0.5172,
+      "recall": 0.1895,
+      "f1": 0.2774,
+      "roc_auc": 0.4967,
+      "confusion_matrix": [
+        [
+          348,
+          98
+        ],
+        [
+          449,
+          105
+        ]
+      ]
+    }
+  ],
+  "final_selected_model": "LogisticRegression",
+  "final_test_metrics": {
+    "model_name": "LogisticRegression (FINAL TEST)",
+    "accuracy": 0.548,
+    "precision": 0.5462,
+    "recall": 0.9908,
+    "f1": 0.7042,
+    "roc_auc": 0.5261,
+    "confusion_matrix": [
+      [
+        10,
+        447
+      ],
+      [
+        5,
+        538
+      ]
+    ]
+  }
+}

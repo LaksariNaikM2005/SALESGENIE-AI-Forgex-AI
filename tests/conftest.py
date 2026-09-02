@@ -1,4 +1,5 @@
 import pytest
+from werkzeug.security import generate_password_hash
 from backend.app import create_app
 from backend.app.extensions import db
 from backend.app.models import User
@@ -17,7 +18,7 @@ def app():
         user = User(
             name="Test Rep",
             email="testrep@salesgenie.ai",
-            password_hash="pbkdf2:sha256:testpass",
+            password_hash=generate_password_hash("Password123!"),
             role="sales_rep",
         )
         db.session.add(user)
@@ -35,18 +36,21 @@ def auth_headers(client):
     res = client.post("/api/auth/register", json={
         "name": "Auth User",
         "email": "authuser@salesgenie.ai",
-        "password": "Password123!"
+        "password": "Password123!",
+        "confirm_password": "Password123!"
     })
-    if res.status_code != 201:
-        res = client.post("/api/auth/login", json={
+    token = None
+    if res.status_code == 201:
+        login_res = client.post("/api/auth/login", json={
             "email": "authuser@salesgenie.ai",
             "password": "Password123!"
         })
-    token = res.json.get("access_token") if "access_token" in res.json else None
-    if not token:
-        res_login = client.post("/api/auth/login", json={
+        token = login_res.json.get("access_token")
+    else:
+        login_res = client.post("/api/auth/login", json={
             "email": "authuser@salesgenie.ai",
             "password": "Password123!"
         })
-        token = res_login.json.get("access_token")
+        token = login_res.json.get("access_token")
     return {"Authorization": f"Bearer {token}"}
+

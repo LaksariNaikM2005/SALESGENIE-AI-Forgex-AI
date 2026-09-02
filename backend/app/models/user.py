@@ -47,8 +47,25 @@ class User(db.Model):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
+    last_login_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=True,
+    )
+
     leads = db.relationship(
         "Lead",
         back_populates="assigned_user",
         lazy=True,
     )
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "role": self.role,
+            "is_active": self.is_active,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+            "last_login_at": self.last_login_at.isoformat() if self.last_login_at else None,
+        }

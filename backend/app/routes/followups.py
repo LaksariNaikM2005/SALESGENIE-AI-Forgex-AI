@@ -63,6 +63,23 @@ def serialize_followup(followup):
     }
 
 
+
+@followups_bp.route("/api/followups", methods=["GET"])
+@jwt_required()
+def get_all_global_followups():
+    status = request.args.get("status")
+    query = FollowUpHistory.query
+
+    if status:
+        query = query.filter_by(status=status)
+
+    followups = query.order_by(FollowUpHistory.scheduled_at.desc()).all()
+
+    return jsonify({
+        "followups": [serialize_followup(f) for f in followups]
+    }), 200
+
+
 @followups_bp.route(
     "/api/leads/<int:lead_id>/followups",
     methods=["POST"]

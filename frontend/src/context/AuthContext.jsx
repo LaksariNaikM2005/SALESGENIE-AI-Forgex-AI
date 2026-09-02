@@ -1,7 +1,15 @@
 import React, { createContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import authService from '../services/authService';
 
-export const AuthContext = createContext();
+export const AuthContext = createContext({
+  user: null,
+  login: async () => {},
+  register: async () => {},
+  logout: async () => {},
+  updateProfile: async () => {},
+  changePassword: async () => {},
+  loading: true,
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -10,8 +18,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      api.get('/auth/me')
-        .then(res => setUser(res.data))
+      authService.getCurrentUser()
+        .then(userData => setUser(userData))
         .catch(() => logout())
         .finally(() => setLoading(false));
     } else {
@@ -20,19 +28,44 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
-    localStorage.setItem('access_token', res.data.access_token);
-    setUser(res.data.user);
-    return res.data;
+    const data = await authService.login(email, password);
+    localStorage.setItem('access_token', data.access_token);
+    setUser(data.user);
+    return data;
   };
 
-  const logout = () => {
+  const register = async (name, email, password, confirmPassword, role) => {
+    const data = await authService.register(name, email, password, confirmPassword, role);
+    return data;
+  };
+
+  const logout = async () => {
+    await authService.logout();
     localStorage.removeItem('access_token');
     setUser(null);
   };
 
+  const updateProfile = async (profileData) => {
+    const data = await authService.updateProfile(profileData);
+    setUser(data.user);
+    return data;
+  };
+
+  const changePassword = async (currentPassword, newPassword, confirmPassword) => {
+    const data = await authService.changePassword(currentPassword, newPassword, confirmPassword);
+    return data;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{
+      user,
+      login,
+      register,
+      logout,
+      updateProfile,
+      changePassword,
+      loading,
+    }}>
       {children}
     </AuthContext.Provider>
   );

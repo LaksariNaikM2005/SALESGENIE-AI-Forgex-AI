@@ -1,137 +1,106 @@
+import logging
 from pathlib import Path
-
+import warnings
 import joblib
 import pandas as pd
 
-
-MODEL_PATH = Path(
-    "ai_ml_engine/models/lead_scoring_model.joblib"
+from ai_ml_engine.features.feature_engineering import (
+    CATEGORICAL_FEATURES,
+    NUMERIC_FEATURES,
 )
 
+# Suppress sklearn unpickle version mismatch warnings cleanly
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*unpickle estimator.*")
 
-FEATURE_COLUMNS = [
-    "account",
-    "sector",
-    "year_established",
-    "revenue",
-    "employees",
-    "office_location",
-    "subsidiary_of",
-    "product",
-    "series",
-    "sales_price",
-    "sales_agent",
-    "manager",
-    "regional_office",
-    "engage_year",
-    "engage_month",
-    "engage_quarter",
-    "engage_dayofweek",
-    "account_age",
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
 
-    "historical_global_win_rate",
-    "historical_account_win_rate",
-    "historical_product_win_rate",
-    "historical_agent_win_rate",
-    "historical_sector_win_rate",
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+MODEL_PATH = PROJECT_ROOT / "ai_ml_engine" / "models" / "lead_scoring_model.joblib"
 
-    "account_previous_deals",
-    "product_previous_deals",
-    "agent_previous_deals",
-]
+FEATURE_COLUMNS = CATEGORICAL_FEATURES + NUMERIC_FEATURES
 
 
 def load_model():
-
+    """Loads the persisted scikit-learn pipeline model cleanly without version warnings."""
     if not MODEL_PATH.exists():
-        raise FileNotFoundError(
-            f"Model not found: {MODEL_PATH}"
-        )
+        raise FileNotFoundError(f"Trained ML model artifact not found at: {MODEL_PATH}")
 
-    return joblib.load(
-        MODEL_PATH
-    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return joblib.load(MODEL_PATH)
 
 
-def predict_lead(lead_data):
-
+def predict_lead(lead_data: dict) -> dict:
+    """
+    Accepts raw lead attribute dict, transforms inputs, runs inference,
+    and returns lead score, purchase probability, and prediction class.
+    """
     model = load_model()
 
-    df = pd.DataFrame(
-        [lead_data]
-    )
+    df = pd.DataFrame([lead_data])
 
-    # Ensure every expected feature exists.
+    # Ensure all expected feature columns exist
     for column in FEATURE_COLUMNS:
-        if column not in df.columns:
-            df[column] = None
+        if column not in df.columns or pd.isna(df[column].iloc[0]):
+            if column in NUMERIC_FEATURES:
+                df[column] = 0.0
+            else:
+                df[column] = "Unknown"
 
-    df = df[
-        FEATURE_COLUMNS
-    ]
+    df = df[FEATURE_COLUMNS]
 
-    probability = float(
-        model.predict_proba(
-            df
-        )[0][1]
-    )
+    try:
+        probabilities = model.predict_proba(df)[0]
+        purchase_prob = float(probabilities[1])
+    except Exception:
+        prediction_val = int(model.predict(df)[0])
+        purchase_prob = 1.0 if prediction_val == 1 else 0.0
 
-    prediction = int(
-        model.predict(df)[0]
-    )
-
-    lead_score = round(
-        probability * 100,
-        2
-    )
+    prediction_class = "Won" if purchase_prob >= 0.5 else "Lost"
+    lead_score = round(purchase_prob * 100, 2)
 
     return {
-        "prediction": (
-            "Won"
-            if prediction == 1
-            else "Lost"
-        ),
-        "purchase_probability": round(
-            probability,
-            4
-        ),
+        "prediction": prediction_class,
+        "purchase_probability": round(purchase_prob, 4),
         "lead_score": lead_score,
     }
 
 
 if __name__ == "__main__":
-
-    example = {
-        "account": "Acme Corporation",
-        "sector": "technolgy",
-        "year_established": 1996,
-        "revenue": 1100.04,
-        "employees": 2822,
+    print("Testing Model Reload & Inference...")
+    sample_lead = {
+        "account": "Apex Precision Robotics",
+        "sector": "industrial_automation",
+        "year_established": 1998,
+        "revenue": 85.0,
+        "employees": 1450,
         "office_location": "United States",
-        "subsidiary_of": None,
-        "product": "GTX Basic",
-        "series": "GTX",
-        "sales_price": 550,
-        "sales_agent": "Moses Frase",
-        "manager": "Unknown",
-        "regional_office": "Central",
-        "engage_year": 2017,
-        "engage_month": 1,
-        "engage_quarter": 1,
-        "engage_dayofweek": 2,
-        "account_age": 21,
-
-        "historical_global_win_rate": 0.50,
-        "historical_account_win_rate": 0.50,
-        "historical_product_win_rate": 0.50,
-        "historical_agent_win_rate": 0.50,
-        "historical_sector_win_rate": 0.50,
-
-        "account_previous_deals": 0,
-        "product_previous_deals": 0,
-        "agent_previous_deals": 0,
+        "subsidiary_of": "Apex Global",
+        "product": "Robotic Assembly Cell X7",
+        "series": "Industrial Automation",
+        "sales_price": 125000,
+        "sales_agent": "Marcus Vance",
+        "manager": "Alex Vance",
+        "regional_office": "Midwest Region",
+        "engage_year": 2024,
+        "engage_month": 5,
+        "engage_quarter": 2,
+        "engage_dayofweek": 3,
+        "account_age": 26,
+        "deal_cycle_days": 45,
+        "price_ratio": 1.1,
+        "revenue_per_employee": 0.0586,
+        "historical_global_win_rate": 0.54,
+        "historical_account_win_rate": 0.60,
+        "historical_product_win_rate": 0.58,
+        "historical_agent_win_rate": 0.55,
+        "historical_sector_win_rate": 0.56,
+        "account_previous_deals": 3,
+        "product_previous_deals": 10,
+        "agent_previous_deals": 15,
     }
 
-    print(
-        predict_lead(example)
-    )
+    result = predict_lead(sample_lead)
+    print("Inference Result:", result)

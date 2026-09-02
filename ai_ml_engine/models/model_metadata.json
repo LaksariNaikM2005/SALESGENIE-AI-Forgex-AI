@@ -1,0 +1,80 @@
+{
+  "model_name": "LogisticRegression",
+  "model_version": "2.0.0",
+  "training_dataset_reference": "ai_ml_engine/data/raw/sales_pipeline.csv",
+  "trained_at": "2026-09-02T08:16:20.692674+00:00",
+  "total_rows": 5000,
+  "train_rows": 3000,
+  "validation_rows": 1000,
+  "test_rows": 1000,
+  "features": [
+    "account",
+    "sector",
+    "office_location",
+    "subsidiary_of",
+    "product",
+    "series",
+    "sales_agent",
+    "manager",
+    "regional_office",
+    "year_established",
+    "revenue",
+    "employees",
+    "sales_price",
+    "engage_year",
+    "engage_month",
+    "engage_quarter",
+    "engage_dayofweek",
+    "account_age",
+    "deal_cycle_days",
+    "price_ratio",
+    "revenue_per_employee",
+    "historical_global_win_rate",
+    "historical_account_win_rate",
+    "historical_product_win_rate",
+    "historical_agent_win_rate",
+    "historical_sector_win_rate",
+    "account_previous_deals",
+    "product_previous_deals",
+    "agent_previous_deals"
+  ],
+  "target": "target",
+  "validation_metrics": {
+    "model_name": "LogisticRegression (Val)",
+    "accuracy": 0.536,
+    "precision": 0.5522,
+    "recall": 0.8592,
+    "f1": 0.6723,
+    "roc_auc": 0.5595,
+    "confusion_matrix": [
+      [
+        60,
+        386
+      ],
+      [
+        78,
+        476
+      ]
+    ]
+  },
+  "test_metrics": {
+    "model_name": "LogisticRegression (FINAL TEST)",
+    "accuracy": 0.548,
+    "precision": 0.5462,
+    "recall": 0.9908,
+    "f1": 0.7042,
+    "roc_auc": 0.5261,
+    "confusion_matrix": [
+      [
+        10,
+        447
+      ],
+      [
+        5,
+        538
+      ]
+    ]
+  },
+  "python_version": "C:\\Users\\AAA\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\sklearn\\__init__.py",
+  "scikit_learn_version": "1.6.1"
+}
