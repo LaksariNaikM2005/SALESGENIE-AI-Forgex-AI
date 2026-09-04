@@ -25,7 +25,8 @@ FEATURE_COLUMNS = CATEGORICAL_FEATURES + NUMERIC_FEATURES
 def load_model():
     """Loads the persisted scikit-learn pipeline model cleanly without version warnings."""
     if not MODEL_PATH.exists():
-        raise FileNotFoundError(f"Trained ML model artifact not found at: {MODEL_PATH}")
+        logger.warning(f"Trained ML model artifact not found at: {MODEL_PATH}")
+        return None
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -51,12 +52,18 @@ def predict_lead(lead_data: dict) -> dict:
 
     df = df[FEATURE_COLUMNS]
 
-    try:
-        probabilities = model.predict_proba(df)[0]
-        purchase_prob = float(probabilities[1])
-    except Exception:
-        prediction_val = int(model.predict(df)[0])
-        purchase_prob = 1.0 if prediction_val == 1 else 0.0
+    if model is None:
+        base_prob = pd.to_numeric(
+            lead_data.get("historical_global_win_rate", 0.5), errors="coerce"
+        )
+        purchase_prob = float(0.5 if pd.isna(base_prob) else max(0.0, min(1.0, base_prob)))
+    else:
+        try:
+            probabilities = model.predict_proba(df)[0]
+            purchase_prob = float(probabilities[1])
+        except Exception:
+            prediction_val = int(model.predict(df)[0])
+            purchase_prob = 1.0 if prediction_val == 1 else 0.0
 
     prediction_class = "Won" if purchase_prob >= 0.10 else "Lost"
     # Calibrate model probability (0.0 - 0.20+) into 0 - 100 score scale
