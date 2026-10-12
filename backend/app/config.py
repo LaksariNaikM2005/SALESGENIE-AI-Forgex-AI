@@ -19,10 +19,7 @@ class Config:
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        "connect_args": {"timeout": 30.0}
-    }
-
+    SQLALCHEMY_ENGINE_OPTIONS = {}
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
     CORS_ORIGINS = [

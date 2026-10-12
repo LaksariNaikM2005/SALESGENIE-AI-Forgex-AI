@@ -42,10 +42,14 @@ logs/
 # Jupyter
 .ipynb_checkpoints/
 
-# Node
+# Node & Next.js
 node_modules/
 frontend/dist/
 frontend/build/
+.next/
+frontend/.next/
+out/
+frontend/out/
 
 # Coverage
 .coverage

@@ -1,62 +1,49 @@
 from datetime import datetime, timezone
+from typing import List
+from sqlalchemy import Boolean, DateTime, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ..extensions import db
+from ..database import Base
 
 
-class User(db.Model):
+class User(Base):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-
-    name = db.Column(db.String(120), nullable=False)
-
-    email = db.Column(
-        db.String(255),
-        nullable=False,
-        unique=True,
-        index=True,
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, index=True
     )
-
-    password_hash = db.Column(
-        db.String(255),
-        nullable=False,
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    email: Mapped[str] = mapped_column(
+        String(255), unique=True, index=True, nullable=False
     )
-
-    role = db.Column(
-        db.String(50),
-        nullable=False,
-        default="sales_rep",
+    password_hash: Mapped[str] = mapped_column(
+        String(255), nullable=False
     )
-
-    is_active = db.Column(
-        db.Boolean,
-        nullable=False,
-        default=True,
+    role: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="sales_rep"
     )
-
-    created_at = db.Column(
-        db.DateTime(timezone=True),
-        nullable=False,
+    is_active: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
-    )
-
-    updated_at = db.Column(
-        db.DateTime(timezone=True),
         nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
     )
-
-    last_login_at = db.Column(
-        db.DateTime(timezone=True),
+    last_login_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         nullable=True,
+        default=None,
     )
 
-    leads = db.relationship(
-        "Lead",
-        back_populates="assigned_user",
-        lazy=True,
-    )
+    # Relationships
+    leads = relationship("Lead", back_populates="assigned_user", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {

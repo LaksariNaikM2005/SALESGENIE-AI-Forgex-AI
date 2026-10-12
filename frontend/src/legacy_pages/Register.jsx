@@ -87,21 +87,11 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Requirement 8: Role Section in User Registration */}
+          /* Requirement 8: Role Section in User Registration */
           <div className="mb-3">
             <label className="form-label small fw-medium" style={{ color: '#e2e8f0' }}>Select Company Role *</label>
             <div className="input-group">
               <span className="input-group-text bg-dark border-secondary text-warning"><ShieldCheck size={16} /></span>
-              <select
-                className="form-select bg-dark text-light border-secondary fw-semibold"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-              >
-                <option value="sales_rep">Sales Representative (Account Executive)</option>
-                <option value="sales_manager">Sales Director / Manager</option>
-                <option value="admin">System Administrator</option>
-              </select>
             </div>
           </div>
 

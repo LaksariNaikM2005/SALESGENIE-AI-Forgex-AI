@@ -5,17 +5,17 @@ export const authService = {
     const res = await api.post('/auth/login', { email, password });
     return res.data;
   },
-
-  register: async (name, email, password, confirmPassword, role = 'sales_rep') => {
+  
+  register: async (name, email, password, confirmPassword) => {
     const res = await api.post('/auth/register', {
-      name,
-      email,
-      password,
-      confirm_password: confirmPassword,
-      role,
-    });
-    return res.data;
-  },
+    name,
+    email,
+    password,
+    confirm_password: confirmPassword,
+  });
+
+  return res.data;
+},
 
   logout: async () => {
     try {

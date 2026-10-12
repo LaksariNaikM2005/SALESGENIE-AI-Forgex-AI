@@ -34,6 +34,11 @@ def seed():
 
         # 1. Seed Demo Users across various enterprise roles (Requirement 3)
         users_to_seed = [
+            ("Admin User", "admin@forgex.ai", "Admin@123", "admin"),
+            ("Sarah Mitchell", "manager@forgex.ai", "Manager@123", "sales_manager"),
+            ("James Carter", "sales@forgex.ai", "Sales@123", "sales_rep"),
+            ("Priya Sharma", "priya@forgex.ai", "Priya@123", "sales_rep"),
+            ("Marcus Vance", "marcus@forgex.ai", "Marcus@123", "sales_rep"),
             ("System Administrator", "admin@salesgenie.ai", "AdminPass123!", "admin"),
             ("Alex Vance (Sales Director)", "manager@salesgenie.ai", "ManagerPass123!", "sales_manager"),
             ("Jordan Blake (Account Executive)", "rep@salesgenie.ai", "RepPass123!", "sales_rep"),

@@ -84,21 +84,35 @@ Generates tailored messaging for industrial manufacturing decision-makers using 
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Modern Technology Stack
 
-### Backend & AI/ML
-- **Language**: Python 3.10+
-- **Framework**: Flask (Modular Blueprint Architecture)
-- **Database**: SQLite / SQLAlchemy ORM
-- **Authentication**: Flask-JWT-Extended (JWT Tokens with RBAC decorators)
-- **Machine Learning**: `scikit-learn 1.6+`, `pandas`, `numpy`, `joblib`
-- **Testing**: `pytest`, `pytest-flask`
-
-### Frontend UI
-- **Framework**: React 18 (Vite)
-- **Styling**: Bootstrap 5 + Vanilla CSS Modern Dark Design
+### 1. Frontend — Next.js + React + TypeScript
+- **Framework**: Next.js 16 (App Router) + React 19 + TypeScript
+- **Styling**: Bootstrap 5 + Vanilla CSS Modern Dark Theme & Glassmorphism
 - **Visualizations**: Chart.js (`react-chartjs-2`)
 - **Icons**: Lucide React
+- **API Client**: Axios & Fetch API with JWT Interceptors
+
+### 2. Backend — FastAPI
+- **Language**: Python 3.10+
+- **Framework**: FastAPI (High-performance ASGI with auto OpenAPI `/docs`)
+- **Authentication**: JWT Tokens with Role-Based Access Control (RBAC: `admin`, `sales_manager`, `sales_rep`)
+- **Validation**: Pydantic v2 schemas
+- **Machine Learning**: `scikit-learn`, `pandas`, `numpy`, `joblib`
+- **Testing**: `pytest`, `pytest-cov`, `httpx`
+
+### 3. Primary Database — PostgreSQL
+- **Database**: PostgreSQL 16 (Relational Primary Store)
+- **ORM**: SQLAlchemy 2.0 (Declarative Base with connection pooling)
+- **Local Dev Resiliency**: Automatic graceful fallback to SQLite for offline dev
+
+### 4. Caching & Background Jobs — Redis + Celery
+- **In-Memory Cache**: Redis 7 (Accelerates dashboard analytics KPIs and sector aggregations with TTL)
+- **Distributed Task Queue**: Celery 5 (Asynchronous execution of lead ML scoring, heavy 5,000-record dataset sync, and follow-ups)
+
+### 5. Deployment — Docker + CI/CD
+- **Containerization**: Multi-container Docker Compose (`postgres`, `redis`, `fastapi`, `celery_worker`, `nextjs`)
+- **CI/CD Pipeline**: GitHub Actions (`.github/workflows/ci.yml`) validating ML pipelines, FastAPI endpoints, Celery tasks, and Next.js TypeScript build
 
 ---
 
@@ -106,44 +120,50 @@ Generates tailored messaging for industrial manufacturing decision-makers using 
 
 ### 1. Prerequisites
 - Python 3.10 or higher
-- Node.js 18+ and npm
+- Node.js 20+ and npm
+- (Optional for full stack) Docker & Docker Compose / PostgreSQL & Redis
 
 ### 2. Environment Setup
-Clone the repository and copy the environment configuration:
 ```bash
 git clone https://github.com/LaksariNaikM2005/SALESGENIE-AI-Forgex-AI.git
 cd SALESGENIE-AI-Forgex-AI
 cp .env.example .env
 ```
 
-### 3. Backend Setup
+### 3. Quick Launch with Docker Compose (Recommended)
 ```bash
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+# Starts PostgreSQL, Redis, FastAPI, Celery worker, and Next.js frontend in one command
+docker-compose up --build
+```
+- Next.js Web App: `http://localhost:3000`
+- FastAPI REST API & Swagger Docs: `http://localhost:5000/docs`
 
-# Install dependencies
+### 4. Local Development Setup
+
+#### Backend (FastAPI + Celery):
+```bash
+python -m venv .venv
+.\.venv\Scripts\Activate  # Windows PowerShell
+
 pip install -r requirements.txt
 
-# Initialize database schema and seed  manufacturing dataset & demo accounts
-python scripts/init_db.py
-python scripts/seed_demo.py
-
-# Start Backend Flask Server
+# Start FastAPI API server
 python backend/run.py
 ```
-Backend API server will run at: `http://127.0.0.1:5000`
+FastAPI interactive docs run at: `http://127.0.0.1:5000/docs`
 
-### 4. Frontend Setup
+#### Celery Background Worker (Optional):
 ```bash
-# Navigate to frontend directory and install packages
-cd frontend
-npm install
+celery -A backend.app.celery_app.celery_app worker --loglevel=info
+```
 
-# Start Vite Development Server
+#### Frontend (Next.js + TypeScript):
+```bash
+cd frontend
+npm install --legacy-peer-deps
 npm run dev
 ```
-Frontend Web Portal will run at: `http://localhost:5173`
+Next.js Web Portal runs at: `http://localhost:3000`
 
 ---
 

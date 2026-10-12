@@ -3,11 +3,24 @@ import re
 from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
+from flask import jsonify
+from ..utils.decorators import role_required
+
 from ..extensions import db
 from ..models import User
 
 users_bp = Blueprint("users", __name__, url_prefix="/api/users")
 EMAIL_REGEX = re.compile(r"^[^@]+@[^@]+\.[^@]+$")
+
+@users_bp.get("")
+@role_required("admin")
+def list_users():
+    users = User.query.order_by(User.id.asc()).all()
+
+    return jsonify({
+        "users": [user.to_dict() for user in users],
+        "total": len(users),
+    }), 200
 
 
 @users_bp.get("/me")

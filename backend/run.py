@@ -1,16 +1,26 @@
-import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import sys
+from pathlib import Path
+import uvicorn
 
-from backend.app import create_app
+# Ensure repository root is in sys.path
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-
-app = create_app()
-
+from backend.app.main import app
 
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=app.config["DEBUG"],
+    host = os.getenv("HOST", "127.0.0.1")
+    port = int(os.getenv("PORT", 5000))
+    debug = os.getenv("DEBUG", "true").lower() == "true"
+
+    print(f"🚀 Starting SalesGenie AI FastAPI Server at http://{host}:{port}")
+    print(f"📚 OpenAPI Interactive Documentation at http://{host}:{port}/docs")
+
+    uvicorn.run(
+        "backend.app.main:app",
+        host=host,
+        port=port,
+        reload=debug,
     )

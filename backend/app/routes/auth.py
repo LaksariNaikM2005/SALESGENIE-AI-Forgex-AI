@@ -33,7 +33,7 @@ def register():
         email = data.get("email")
         password = data.get("password")
         confirm_password = data.get("confirm_password")
-        role = data.get("role", "sales_rep")
+        role = "sales_rep"  # Public registrations must never choose their own role.
 
         if not name or not name.strip():
             return {"error": "Name is required"}, 400

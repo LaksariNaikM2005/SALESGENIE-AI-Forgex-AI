@@ -2,7 +2,7 @@
   "model_name": "LogisticRegression",
   "model_version": "2.0.0",
   "training_dataset_reference": "ai_ml_engine/data/raw/sales_pipeline.csv",
-  "trained_at": "2026-09-02T08:16:20.692674+00:00",
+  "trained_at": "2026-09-02T13:17:13.465340+00:00",
   "total_rows": 5000,
   "train_rows": 3000,
   "validation_rows": 1000,
@@ -75,6 +75,6 @@
       ]
     ]
   },
-  "python_version": "C:\\Users\\AAA\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages\\sklearn\\__init__.py",
-  "scikit_learn_version": "1.6.1"
+  "python_version": "C:\\Users\\AAA\\projects\\FORGE_X AI\\.venv\\lib\\site-packages\\sklearn\\__init__.py",
+  "scikit_learn_version": "1.7.2"
 }

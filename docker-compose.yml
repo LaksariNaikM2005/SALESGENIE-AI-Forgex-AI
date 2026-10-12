@@ -1,30 +1,109 @@
 version: '3.8'
 
 services:
+  # 1. Primary Database - PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: salesgenie-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=salesgenie
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d salesgenie"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Caching & Task Broker - Redis
+  redis:
+    image: redis:7-alpine
+    container_name: salesgenie-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. High-Performance REST API - FastAPI
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
+    container_name: salesgenie-fastapi
+    restart: unless-stopped
     ports:
       - "5000:5000"
     environment:
       - APP_NAME=FORGE_X_AI
       - APP_ENV=production
       - DEBUG=false
-      - DATABASE_URL=sqlite:///app/database/forge_x_ai.db
+      - DATABASE_URL=postgresql+psycopg://postgres:postgres@postgres:5432/salesgenie
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
       - JWT_SECRET_KEY=q4Tvn-StGSzlLr8JB83RwohGeC-r3mDLYlumZEq3Pw9R0ZJuhmuJiWjfjQrxNPGOnG5J3hlz4mK3imvElxnm5A
     volumes:
-      - ./database:/app/database
       - ./ai_ml_engine/models:/app/ai_ml_engine/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
+  # 4. Asynchronous Task Processor - Celery Worker
+  celery_worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: salesgenie-celery
+    restart: unless-stopped
+    command: ["celery", "-A", "backend.app.celery_app.celery_app", "worker", "--loglevel=info"]
+    environment:
+      - APP_NAME=FORGE_X_AI
+      - DATABASE_URL=postgresql+psycopg://postgres:postgres@postgres:5432/salesgenie
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - JWT_SECRET_KEY=q4Tvn-StGSzlLr8JB83RwohGeC-r3mDLYlumZEq3Pw9R0ZJuhmuJiWjfjQrxNPGOnG5J3hlz4mK3imvElxnm5A
+    volumes:
+      - ./ai_ml_engine/models:/app/ai_ml_engine/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # 5. Frontend UI - Next.js + React + TypeScript
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+    container_name: salesgenie-nextjs
+    restart: unless-stopped
     ports:
-      - "80:80"
+      - "3000:3000"
+      - "80:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:5000
+      - BACKEND_URL=http://backend:5000
+      - PORT=3000
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
+  redis_data:
 
 networks:
   default:
